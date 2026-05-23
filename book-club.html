@@ -24,632 +24,443 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
     background: var(--bg);
     color: var(--text);
-    line-height: 1.65;
+    line-height: 1.7;
     font-size: 15px;
   }
 
-  /* header */
   .header {
     background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
     color: #fff;
     text-align: center;
-    padding: 48px 20px 40px;
+    padding: 44px 20px 36px;
     position: sticky;
     top: 0;
     z-index: 100;
     box-shadow: 0 4px 24px rgba(124,58,237,.3);
   }
-  .header h1 { font-size: clamp(22px,4vw,30px); font-weight: 800; margin-bottom: 6px; letter-spacing: -.3px; }
-  .header p { font-size: 13px; opacity: .85; max-width: 440px; margin: 0 auto 20px; }
+  .header h1 { font-size: clamp(20px,4vw,28px); font-weight: 800; margin-bottom: 6px; }
+  .header p { font-size: 13px; opacity: .85; max-width: 480px; margin: 0 auto 16px; }
   .hstats {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 16px;
     flex-wrap: wrap;
   }
-  .hstats div {
-    background: rgba(255,255,255,.18);
-    padding: 8px 18px;
-    border-radius: 10px;
-    text-align: center;
-    min-width: 80px;
-  }
-  .hstats .n { font-size: 24px; font-weight: 800; }
+  .hstats div { background: rgba(255,255,255,.18); padding: 8px 16px; border-radius: 10px; text-align: center; min-width: 72px; }
+  .hstats .n { font-size: 22px; font-weight: 800; }
   .hstats .l { font-size: 11px; opacity: .7; }
-  .prog-wrap {
-    max-width: 400px;
-    margin: 14px auto 0;
-    background: rgba(255,255,255,.25);
-    border-radius: 10px;
-    height: 8px;
-    overflow: hidden;
-  }
-  .prog-fill {
-    height: 100%;
-    background: #fff;
-    border-radius: 10px;
-    transition: width .6s ease;
-    width: 0%;
-  }
-  .reset-btn {
-    position: absolute;
-    top: 12px;
-    right: 14px;
-    background: rgba(255,255,255,.15);
-    border: none;
-    color: rgba(255,255,255,.7);
-    font-size: 11px;
-    cursor: pointer;
-    padding: 4px 10px;
-    border-radius: 6px;
-  }
-  .reset-btn:hover { background: rgba(255,255,255,.3); color: #fff; }
+  .prog-wrap { max-width: 380px; margin: 12px auto 0; background: rgba(255,255,255,.25); border-radius: 10px; height: 7px; overflow: hidden; }
+  .prog-fill { height: 100%; background: #fff; border-radius: 10px; transition: width .6s ease; width: 0%; }
+  .reset-btn { position: absolute; top: 12px; right: 14px; background: rgba(255,255,255,.15); border: none; color: rgba(255,255,255,.7); font-size: 11px; cursor: pointer; padding: 4px 10px; border-radius: 6px; }
 
-  .container { max-width: 760px; margin: 0 auto; padding: 24px 16px 60px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 20px 16px 60px; }
 
-  /* book card */
-  .book-week {
+  .book-card {
     background: var(--card);
     border-radius: var(--r);
     box-shadow: var(--shadow);
     border: 1px solid var(--border);
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     overflow: hidden;
     transition: box-shadow .2s;
   }
-  .book-week:hover { box-shadow: 0 6px 32px rgba(0,0,0,.1); }
-  .book-week.done { border-color: #a7f3d0; }
+  .book-card:hover { box-shadow: 0 6px 28px rgba(0,0,0,.1); }
+  .book-card.done { border-color: #a7f3d0; }
 
-  .week-hd {
+  .book-hd {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 16px 18px;
+    padding: 14px 16px;
     cursor: pointer;
     user-select: none;
     transition: background .15s;
   }
-  .week-hd:hover { background: #faf8f5; }
-  .book-week.open .week-hd { background: var(--primary-light); }
-  .week-num {
-    font-size: 11px;
-    font-weight: 700;
-    background: var(--primary);
-    color: #fff;
-    padding: 3px 10px;
-    border-radius: 6px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .book-week.done .week-num { background: var(--accent); }
-  .book-meta { flex: 1; }
-  .book-meta .title { font-size: 15px; font-weight: 700; }
-  .book-meta .author { font-size: 12px; color: var(--muted); }
-  .book-week.done .book-meta .title { text-decoration: line-through; color: var(--muted); }
-  .done-badge {
-    font-size: 11px;
-    color: var(--accent);
-    font-weight: 600;
-    display: none;
-  }
-  .book-week.done .done-badge { display: block; }
-  .week-arrow {
-    font-size: 16px;
-    color: var(--muted);
-    transition: transform .2s;
-    flex-shrink: 0;
-  }
-  .book-week.open .week-arrow { transform: rotate(180deg); }
+  .book-hd:hover { background: #faf8f5; }
+  .book-card.open .book-hd { background: var(--primary-light); }
+  .wnum { font-size: 11px; font-weight: 700; background: var(--primary); color: #fff; padding: 3px 9px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; }
+  .book-card.done .wnum { background: var(--accent); }
+  .book-info { flex: 1; }
+  .book-info .title { font-size: 15px; font-weight: 700; }
+  .book-info .author { font-size: 12px; color: var(--muted); }
+  .done-check { color: var(--accent); font-size: 13px; display: none; margin-right: 4px; }
+  .book-card.done .done-check { display: inline; }
+  .book-card.done .book-info .title { text-decoration: line-through; color: var(--muted); }
+  .arr { font-size: 16px; color: var(--muted); transition: transform .2s; flex-shrink: 0; }
+  .book-card.open .arr { transform: rotate(180deg); }
 
-  .week-body { display: none; padding: 4px 18px 18px; }
-  .book-week.open .week-body { display: block; }
+  .book-bd { display: none; padding: 0 16px 18px; }
+  .book-card.open .book-bd { display: block; }
 
-  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0 12px; }
-  .tag {
-    font-size: 11px;
-    padding: 2px 10px;
-    border-radius: 5px;
-    background: var(--primary-light);
-    color: var(--primary-dark);
-  }
-  .tag.p { background: #fef3c7; color: #92400e; }
-  .tag.a { background: #fce7f3; color: #9d174d; }
-  .tag.t { background: var(--accent-light); color: #065f46; }
+  .tags { display: flex; gap: 5px; flex-wrap: wrap; margin: 10px 0; }
+  .tag { font-size: 11px; padding: 2px 9px; border-radius: 5px; background: var(--primary-light); color: var(--primary-dark); }
 
-  /* reading plan */
-  .plan {
-    background: #faf8f5;
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 14px;
-    border: 1px solid var(--border);
-  }
-  .plan-hd { font-size: 13px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-  .plan ol {
-    padding-left: 20px;
+  /* content sections */
+  .sec-hd { font-size: 13px; font-weight: 700; color: var(--primary-dark); margin: 14px 0 8px; display: flex; align-items: center; gap: 5px; }
+  .core { background: var(--primary-light); border-radius: 10px; padding: 14px 16px; margin: 10px 0; border-left: 3px solid var(--primary); }
+  .core p { font-size: 14px; color: var(--primary-dark); }
+  .core strong { font-size: 15px; }
+
+  .insight-item {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f0ee;
+    align-items: flex-start;
   }
-  .plan ol li { font-size: 13px; color: var(--muted); }
-  .plan ol li strong { color: var(--text); font-size: 14px; }
+  .insight-item:last-child { border-bottom: none; }
+  .insight-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .insight-text { font-size: 13px; color: #4b5563; }
+  .insight-text strong { color: var(--text); display: block; font-size: 14px; margin-bottom: 2px; }
 
-  /* key insights */
-  .insights { margin-bottom: 14px; }
-  .insights-hd { font-size: 13px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
-  .insights ul {
-    padding-left: 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .insights ul li { font-size: 13px; color: var(--muted); padding-left: 4px; }
-  .insights ul li strong { color: var(--text); }
-
-  /* quote */
-  .quote {
+  .quote-box {
     border-left: 3px solid var(--primary);
-    padding: 10px 14px;
-    background: var(--primary-light);
-    border-radius: 0 8px 8px 0;
-    margin-bottom: 14px;
+    background: linear-gradient(to right, var(--primary-light), #fff);
+    padding: 12px 16px;
+    border-radius: 0 10px 10px 0;
+    margin: 12px 0;
     font-style: italic;
     font-size: 14px;
     color: var(--primary-dark);
   }
-  .quote cite { font-size: 12px; font-style: normal; display: block; margin-top: 4px; color: var(--muted); }
+  .quote-box cite { font-size: 12px; font-style: normal; display: block; margin-top: 4px; color: var(--muted); }
 
-  /* reflection */
-  .reflect {
-    background: #fffbeb;
-    border: 1px solid #fde68a;
+  .action-card {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
     border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 14px;
+    padding: 12px 14px;
+    margin: 10px 0;
   }
-  .reflect-hd { font-size: 13px; font-weight: 700; color: #92400e; margin-bottom: 8px; }
-  .reflect p { font-size: 13px; color: #78350f; margin-bottom: 8px; }
-  .reflect textarea {
-    width: 100%;
-    border: 1px solid #fde68a;
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 13px;
-    font-family: inherit;
-    resize: vertical;
-    min-height: 70px;
-    outline: none;
-    background: #fff;
-    color: var(--text);
-  }
-  .reflect textarea:focus { border-color: var(--primary); }
+  .action-card .action-hd { font-size: 12px; font-weight: 700; color: #166534; margin-bottom: 6px; }
+  .action-list { list-style: none; }
+  .action-list li { font-size: 13px; color: #15803d; padding: 3px 0; display: flex; gap: 6px; align-items: flex-start; }
+  .action-list li::before { content: '✓'; flex-shrink: 0; }
 
-  /* complete btn */
-  .comp-btn {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: none;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    background: var(--primary);
-    color: #fff;
-    transition: background .15s;
+  .think { background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 14px; margin: 10px 0; }
+  .think-hd { font-size: 12px; font-weight: 700; color: #92400e; margin-bottom: 6px; }
+  .think textarea {
+    width: 100%; border: 1px solid #fde68a; border-radius: 8px;
+    padding: 8px 10px; font-size: 13px; font-family: inherit;
+    resize: vertical; min-height: 60px; outline: none; background: #fff; color: var(--text);
   }
-  .comp-btn:hover { background: var(--primary-dark); }
-  .book-week.done .comp-btn { background: var(--accent); cursor: default; }
-  .book-week.done .comp-btn::after { content: ' ✓ 已完成'; }
+  .think textarea:focus { border-color: var(--primary); }
 
-  /* intro section */
-  .intro {
-    background: var(--card);
-    border-radius: var(--r);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    padding: 20px 22px;
-    margin-bottom: 24px;
+  .mark-btn {
+    width: 100%; padding: 11px; border-radius: 10px; border: none;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    background: var(--primary); color: #fff; transition: background .15s; margin-top: 10px;
   }
-  .intro h2 { font-size: 17px; margin-bottom: 8px; }
-  .intro p { font-size: 13px; color: var(--muted); }
-  .intro p strong { color: var(--text); }
+  .mark-btn:hover { background: var(--primary-dark); }
+  .book-card.done .mark-btn { background: var(--accent); cursor: default; }
 
   footer { text-align: center; padding: 30px 20px; color: var(--muted); font-size: 12px; }
 
   @media (max-width: 600px) {
-    .header { padding: 32px 14px 24px; }
-    .hstats { gap: 10px; }
+    .header { padding: 30px 14px 22px; }
+    .hstats { gap: 8px; }
     .container { padding: 14px 10px 50px; }
-    .week-hd, .week-body { padding-left: 14px; padding-right: 14px; }
-    .plan, .reflect, .quote { margin-left: 0; margin-right: 0; }
   }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <button class="reset-btn" onclick="if(confirm('重置所有阅读进度？')){localStorage.removeItem('book-club');location.reload()}">重置</button>
+  <button class="reset-btn" onclick="if(confirm('重置所有进度？')){localStorage.removeItem('book2');location.reload()}">重置</button>
   <h1>📚 每周30分钟 · 精读好书</h1>
-  <p>每本书只需 30 分钟 · 掌握一个改变认知的核心概念</p>
+  <p>每本书30分钟精华 · 无需读完原书也能掌握核心</p>
   <div class="hstats">
-    <div><div class="n" id="done-count">0</div><div class="l">已完成</div></div>
-    <div><div class="n" id="total-books">12</div><div class="l">书单总数</div></div>
+    <div><div class="n" id="done">0</div><div class="l">已完成</div></div>
+    <div><div class="n">12</div><div class="l">书单总数</div></div>
     <div><div class="n" id="pct">0%</div><div class="l">完成率</div></div>
   </div>
-  <div class="prog-wrap"><div class="prog-fill" id="prog-bar"></div></div>
+  <div class="prog-wrap"><div class="prog-fill" id="bar"></div></div>
 </div>
 
 <div class="container" id="app"></div>
 
-<footer>每周30分钟精读 · 2026 · 用思想塑造更好的自己</footer>
+<footer>每周30分钟精读 · 2026</footer>
 
 <script>
-const KEY = 'book-club';
+const K = 'book2';
 const TOTAL = 12;
+let S = {};
 
 const books = [
   {
-    week: 1,
-    title: '影响力',
-    author: 'Robert Cialdini',
-    tags: ['心理学', '说服力', '商业'],
-    time: '约30分钟',
-    plan: [
-      { min: '0-8', tip: '先快速翻阅全书框架（推荐跳读第3、4章）' },
-      { min: '8-18', tip: '重点读「互惠」「社会认同」「承诺与一致」三大原则' },
-      { min: '18-28', tip: '思考：这三条如何用在你自己的工作/生活中？' },
-      { min: '28-30', tip: '写下1条最触动你的洞察 + 下周行动' }
-    ],
+    week: 1, title: '影响力', author: 'Robert Cialdini', time: '约25分钟读完',
+    tags: ['心理学', '说服力'],
+    summary: 'Cialdini 用30年研究揭示了6条核心说服原理。这些原理之所以有效，是因为人类在漫长的进化中形成了固定的心理反应模式——顺从者只要触发这些模式，就能自动获得顺从。',
+    core: '影响力的本质不是强行推销，而是设计情境，让对方因为自己的心理需求而主动说"好"。',
     quote: '"影响力的本质是：在某些情境下，人们的行为完全取决于事先预设好的固定机械式反应。"',
     cite: '— Robert Cialdini',
     insights: [
-      '<strong>互惠原理：</strong>给予小恩惠，往往能换来大回报',
-      '<strong>社会认同：</strong>人在不确定时会模仿他人的行为',
-      '<strong>承诺与一致：</strong>一旦公开承诺，人会努力保持一致',
-      '<strong>稀缺：</strong>稀缺感会大幅提升物品的感知价值'
+      { icon: '🔄', title: '互惠', text: '给予小恩惠，往往能换来不成比例的大回报。因为人类有"欠债"的心理压力，清偿后反而更容易再次被说服。' },
+      { icon: '📣', title: '社会认同', text: '人在不确定时会自动模仿他人的行为。看到"已有1000万人选择"，你会更倾向于选择。' },
+      { icon: '✊', title: '承诺与一致', text: '一旦公开做出承诺，人会努力保持行为一致。初期的微小承诺会逐渐被放大。' },
+      { icon: '⚖️', title: '权威', text: '人对权威有天然的服从倾向。白大褂、头衔、穿着都能增加顺从。' },
+      { icon: '💎', title: '稀缺', text: '稀缺感会大幅提升物品的感知价值。"仅剩3件"比"有货"更有说服力。' },
+      { icon: '❤️', title: '喜好', text: '人更容易被喜欢的人说服。外表的吸引力、相似性、称赞、熟悉感都是喜好触发器。' }
     ],
-    reflection: '想想你最近一次被人「套路」说服的经历——用到了影响力的哪条原理？'
+    actions: ['下次请求别人帮忙前，先主动提供一个小帮助', '在不确定时，引用"大多数人的选择"来增强说服力', '让对方公开做出小承诺，然后逐步放大'],
+    think: '回想你最近一次买东西的经历——你被哪个"影响力原理"触发了？'
   },
   {
-    week: 2,
-    title: '思考，快与慢',
-    author: 'Daniel Kahneman',
+    week: 2, title: '思考，快与慢', author: 'Daniel Kahneman', time: '约30分钟读完',
     tags: ['行为经济学', '决策', '认知'],
-    time: '约30分钟',
-    plan: [
-      { min: '0-8', tip: '理解「系统1/系统2」的核心框架' },
-      { min: '8-18', tip: '重点读「锚定效应」「可得性启发」' },
-      { min: '18-28', tip: '对照思考：你有哪些常见的思维陷阱？' },
-      { min: '28-30', tip: '写出你最容易犯的认知偏误' }
-    ],
+    summary: 'Kahneman 通过40年心理学研究，揭示人脑有两套截然不同的思考系统：系统1自动快速、系统2理性缓慢。我们以为自己在理性思考，实际上系统1在主导大多数决策——这导致了可预测的非理性。',
+    core: '我们的思考并不可靠。系统1通过直觉和情绪快速判断，系统2看似理性却经常"偷懒"接受系统1的答案。了解这一点，是改善决策的第一步。',
     quote: '"我们对自己未知的事物一无所知。我们意识不到自己其实并不思考。"',
     cite: '— Daniel Kahneman',
     insights: [
-      '<strong>系统1（快思考）：</strong>自动、情绪化、直觉驱动',
-      '<strong>系统2（慢思考）：</strong>理性、逻辑、深思熟虑',
-      '<strong>锚定效应：</strong>先看到什么数字，会影响后续判断',
-      '<strong>损失厌恶：</strong>失去100元的痛苦 > 得到100元快乐'
+      { icon: '⚡', title: '系统1（快思考）', text: '自动运行、情绪化、直觉驱动。不需要努力就能做出判断，但容易产生系统性错误。' },
+      { icon: '🧠', title: '系统2（慢思考）', text: '理性、逻辑、深思熟虑。但它很懒惰，常常直接采纳系统1的判断而不加审查。' },
+      { icon: '⚓', title: '锚定效应', text: '先看到什么数字，会像锚一样影响后续判断。谈判时先出价的一方往往占据优势。' },
+      { icon: '📉', title: '损失厌恶', text: '失去100元的痛苦 ≈ 得到250元快乐的强度。面对损失时人的风险偏好会反转。' },
+      { icon: '📊', title: '回归平均值', text: '极端表现之后往往会回归平均，这不是因果关系，只是统计必然。但我们常常错误归因。' },
+      { icon: '🎯', title: '规划谬误', text: '我们系统性地低估完成项目所需的时间、成本和风险。过度乐观是人的默认设置。' }
     ],
-    reflection: '你上一次「脑子一热」做的决定是什么？现在回头看，系统1还是系统2在主导？'
+    actions: ['重大决策前，强制自己"等一等"——给系统2介入的时间', '警惕"锚定数字"，先看到的价格会影响你后续的判断', '计算概率时，不要相信脱离基率的直觉'],
+    think: '你最近一次"脑子一热"做的决定是什么？现在回头看，系统1还是系统2在主导？'
   },
   {
-    week: 3,
-    title: '学会提问',
-    author: 'Neil Browne & Stuart Keeley',
+    week: 3, title: '学会提问', author: 'Neil Browne & Stuart Keeley', time: '约25分钟读完',
     tags: ['批判思维', '逻辑', '提问'],
-    time: '约30分钟',
-    plan: [
-      { min: '0-8', tip: '理解「海绵式思维」vs「淘金式思维」的区别' },
-      { min: '8-18', tip: '学会对结论追问「证据是什么？」「如何得出？」' },
-      { min: '18-28', tip: '识别11种批判性思维问题，特别是「价值观假设」' },
-      { min: '28-30', tip: '找一个你坚信的观点，试着用批判性问题审视它' }
-    ],
+    summary: '批判性思维的核心不是否定一切，而是主动提问、质疑推理。这本书教会你一套系统性的提问框架，区分"海绵式被动吸收"和"淘金式主动筛选"——后者才是真正的学习。',
+    core: '提问能力决定了你的思考质量。好的问题能穿透表面信息，触达真正的论据和假设。',
     quote: '"一个答案质量的高低，取决于问题质量的高低。"',
     cite: '— Neil Browne',
     insights: [
-      '<strong>海绵式思维：</strong>被动吸收信息，不加甄别',
-      '<strong>淘金式思维：</strong>主动提问、质疑、筛选信息',
-      '<strong>论题 vs 结论：</strong>先确认结论，再找支撑理由',
-      '<strong>价值观假设：</strong>每个论证背后都有未被说出的价值观'
+      { icon: '🧽', title: '海绵式思维', text: '被动吸收信息，不加甄别。读了很多书，但缺乏独立判断——这是低效的学习。' },
+      { icon: '⛏️', title: '淘金式思维', text: '主动提问、质疑、筛选信息。和作者"对话"，只保留真正有价值的部分。' },
+      { icon: '❓', title: '论题 vs 结论', text: '讨论任何问题，先确认论题和结论是什么，再找支撑的理由——很多人争了半天却不在同一个点上。' },
+      { icon: '🔍', title: '证据是什么', text: '结论需要证据支撑。问"这个数据从哪里来？样本够大吗？"能快速识别低质量论证。' },
+      { icon: '💭', title: '价值观假设', text: '每个论证背后都有未被说出的价值前提。质疑"理所当然"的假设，是批判思维的核心。' },
+      { icon: '🤔', title: '替代假设', text: '看到一个解释时，主动问："还有别的解释吗？"能防止过早下结论。' }
     ],
-    reflection: '选一篇你最近在朋友圈/公众号读到的观点，列出它省略了哪些「理所当然」的假设？'
+    actions: ['读任何文章时，先找论题和结论，再问"为什么"', '遇到"专家说"时，问：这个专家的专业领域是什么？他和这件事有利益关系吗？', '把"我觉得"改成"我的假设是"——强迫自己明确思考'],
+    think: '选一篇你最近读到的观点，试着用三个问题质疑它：证据是什么？假设是什么？有没有替代解释？'
   },
   {
-    week: 4,
-    title: '设计心理学',
-    author: 'Don Norman',
+    week: 4, title: '设计心理学', author: 'Don Norman', time: '约25分钟读完',
     tags: ['设计思维', '用户体验', '产品'],
-    tagClass: 't',
-    time: '约30分钟',
-    plan: [
-      { min: '0-8', tip: '理解「示能」「映射」「反馈」「概念模型」四大原则' },
-      { min: '8-18', tip: '思考日常用品的设计：哪些做得好？哪些让人困惑？' },
-      { min: '18-28', tip: '重点理解：为什么「以用户为中心的设计」如此重要' },
-      { min: '28-30', tip: '找一个你常用的产品，分析它的概念模型是否清晰' }
-    ],
-    quote: '"好的设计比糟糕的设计更难被注意到，因为好的设计会让我们专注于完成任务本身，而非工具本身。"',
+    summary: 'Norman 被誉为"现代设计之父"，他提出好的设计核心是让用户无需思考。这本书定义了用户体验设计的四大黄金原则：示能、映射、反馈、概念模型——这些原则至今仍是互联网产品的基石。',
+    core: '好的设计让产品"不言自明"——用户看到就能知道怎么用，不需要说明书。差的设计则需要文字解释和培训。',
+    quote: '"好设计比糟糕的设计更难被注意到，因为好的设计让我们专注于完成任务本身，而非工具本身。"',
     cite: '— Don Norman',
     insights: [
-      '<strong>示能（Affordance）：</strong>物品本身暗示的使用方式',
-      '<strong>映射：</strong>控制与效果之间的空间对应关系',
-      '<strong>反馈：</strong>每个动作都应即时得到系统反馈',
-      '<strong>概念模型：</strong>用户脑中关于系统运作方式的简化图景'
+      { icon: '👁️', title: '示能（Affordance）', text: '物品本身暗示的使用方式。椅子有"可以坐"的示能，门把手有"可以转动"的示能。数字产品也应该有清晰的视觉示能。' },
+      { icon: '↔️', title: '映射（Mapping）', text: '控制与效果之间的空间或逻辑对应。上下开关调节音量——直觉上正确；左右调节音量——需要学习。' },
+      { icon: '🔔', title: '反馈（Feedback）', text: '每个动作都应立即得到系统的回应。按下按钮要有点击感，点击要变色，提交要显示成功或失败。' },
+      { icon: '🗺️', title: '概念模型（Conceptual Model）', text: '用户脑中关于系统运作方式的简化图景。银行ATM的"取款=减少余额"概念模型清晰，所以用起来不困惑。' },
+      { icon: '⚠️', title: '错误设计', text: '好的设计能预防错误，而非事后惩罚。保险箱密码连续输错3次应自动锁定，而非只是响铃。' },
+      { icon: '🎨', title: '可视性', text: '功能越隐藏，用户越需要记忆。重要操作要"所见即所得"，而不是藏在菜单深处。' }
     ],
-    reflection: '你手机里哪个App的某个交互最让你困惑？用Norman四原则分析一下问题在哪里。'
+    actions: ['遇到让你困惑的产品交互时，用四大原则分析问题', '设计任何流程时，先画用户的心智模型，再设计对应界面', '功能增加前，先问：这个功能是否会造成用户认知负担？'],
+    think: '选一个你每天使用的App，分析它的某个交互是否符合"示能-映射-反馈-概念模型"四原则。'
   },
   {
-    week: 5,
-    title: '心流',
-    author: 'Mihaly Csikszentmihalyi',
+    week: 5, title: '心流', author: 'Mihaly Csikszentmihalyi', time: '约25分钟读完',
     tags: ['心理学', '效率', '幸福'],
-    time: '约30分钟',
-    plan: [
-      { min: '0-8', tip: '理解「心流」的8个特征条件' },
-      { min: '8-18', tip: '理解「挑战度」与「技能水平」的平衡关系图' },
-      { min: '18-28', tip: '思考：你上一次进入心流状态是什么时候？' },
-      { min: '28-30', tip: '设计你下周的「心流时段」：固定时间+排除干扰+明确目标' }
-    ],
+    summary: 'Csikszentmihalyi 访谈了上万人（包括禅师、奥运冠军、装配线工人），发现了一种最优体验状态——心流：当挑战度和技能水平完美匹配时，人会进入忘我、充实、意义感爆棚的状态。这是幸福感的真正来源。',
+    core: '幸福不是状态，而是能力。能够在任何活动中创造心流体验的人，无论外部环境如何，内心都是充实和满足的。',
     quote: '"控制意识最优雅的方式，是让它专注于生活中积极正向的体验。"',
     cite: '— Mihaly Csikszentmihalyi',
     insights: [
-      '<strong>心流8特征：</strong>全神贯注、知行合一、思绪清晰、得失心消失、时间扭曲、自我意识消失、发自内心的愉悦',
-      '<strong>挑战-技能平衡：</strong>太无聊→焦虑，太难→焦虑；恰到好处→心流',
-      '<strong>清晰目标：</strong>心流发生在目标明确、可量化的时候',
-      '<strong>内在动机：</strong>真正持久的动力来自过程本身，而非外部奖励'
+      { icon: '🌊', title: '心流8特征', text: '全神贯注、知行合一、思绪清晰、得失心消失、时间扭曲、自我意识消失、发自内心的愉悦、感到活动本身有价值。' },
+      { icon: '📈', title: '挑战-技能平衡', text: '太无聊→焦虑；太难→焦虑；恰到好处→心流。随着技能提升，需要提高挑战难度，否则会滑入无聊区。' },
+      { icon: '🎯', title: '清晰目标', text: '心流发生在目标明确、可量化的时候。模糊的目标让大脑无法进入专注状态。' },
+      { icon: '💪', title: '内在动机', text: '真正持久的动力来自过程本身，而非外部奖励。当"做事"本身就是奖励时，心流就来了。' },
+      { icon: '🧘', title: '注意力管理', text: '心流的关键是把注意力完全投入当下。外部干扰会打断心流，重建需要10-15分钟。' },
+      { icon: '📝', title: '记录体验', text: '定期回顾"什么时候我最投入？什么活动让我忘记时间？"这能帮助你复制心流体验。' }
     ],
-    reflection: '用「挑战-技能」框架分析你上周的工作状态——大多数时间落在哪个区域？'
+    actions: ['每天预留一个"心流时段"（1-2小时），关掉所有通知，专注做一件事', '工作/学习任务先用5分钟设定清晰目标再开始', '问自己：这项活动我是在追求结果，还是在享受过程？'],
+    think: '用"挑战-技能"框架分析你上周的状态：大多数时间落在无聊区、焦虑区，还是心流区？'
   },
   {
-    week: 6,
-    title: '被讨厌的勇气',
-    author: '岸见一郎 & 古贺史健',
+    week: 6, title: '被讨厌的勇气', author: '岸见一郎 & 古贺史健', time: '约25分钟读完',
     tags: ['心理学', '哲学', '自我成长'],
-    tagClass: 'p',
-    time: '约30分钟',
-    plan: [
-      { min: '0-8', tip: '理解阿德勒心理学的核心：「目的论」而非「原因论」' },
-      { min: '8-18', tip: '理解「课题分离」：分清什么是你的事，什么是别人的事' },
-      { min: '18-28', tip: '理解「共同体感觉」：人际关系中的归属感来源' },
-      { min: '28-30', tip: '找一个你一直在逃避的任务，问自己：「我真的在意，还是在用「害怕失败」当借口？」' }
-    ],
+    summary: '这本书用对话体讲解阿德勒心理学，核心是：你的痛苦不是由过去决定的，而是由你现在的"目的"服务。所谓的"原因论"（过去决定现在）是借口，真正的"目的论"让你看到改变的可能性——只要你愿意承担选择的责任。',
+    core: '你的不幸，是自己选择的。不是过去，不是环境，是因为你害怕改变、害怕被讨厌、害怕失败——所以用"我就是这样的人"来保护自己。',
     quote: '"所谓的自由，就是敢于被别人讨厌的勇气。"',
     cite: '— 岸见一郎',
     insights: [
-      '<strong>原因论：</strong>过去决定现在（弗洛伊德）',
-      '<strong>目的论：</strong>现在是为某个目的服务（阿德勒）',
-      '<strong>课题分离：</strong>我不为别人的情绪负责，别人也不该干涉我的选择',
-      '<strong>共同体感觉：</strong>在关系中寻找归属感，而非通过竞争确立优越感'
+      { icon: '🔙', title: '原因论 vs 目的论', text: '弗洛伊德：过去决定现在（原因论）。阿德勒：现在是为某个目的服务的（目的论）。"愤怒是为了让别人屈服"——这是目的论。' },
+      { icon: '📋', title: '课题分离', text: '我的人生课题和别人的人生课题是分开的。我不能强迫别人改变，也不该让别人来承担我人生的责任。' },
+      { icon: '🌍', title: '共同体感觉', text: '人需要在关系中寻找归属感，但归属感来自于"贡献感"而非"被认可"。为共同体做出贡献，就自然有了归属。' },
+      { icon: '🚶', title: '甘于平凡的勇气', text: '接受自己是普通人，并不意味着放弃追求。不需要"优越性"来证明自己的价值。' },
+      { icon: '⏩', title: '此时此刻', text: '人生不是一条线，而是无数个"此时此刻"连成的。纠结过去、焦虑未来——不如专注于当下这一秒。' },
+      { icon: '🧗', title: '甘冒不满足的风险', text: '想要自由，就要接受可能被讨厌的可能性。人际关系中的摩擦是正常的，不该因为害怕冲突而逃避。' }
     ],
-    reflection: '选一个你目前纠结的选择，用「课题分离」分析：这是你的事，还是别人的事？'
+    actions: ['遇到纠结的选择时，用"课题分离"分析：这是我的事还是别人的事？', '把"我没办法"换成"我选择"——语言改变思维', '每天给自己一个"被讨厌"的练习：拒绝一个不合理的请求'],
+    think: '你目前最纠结的一件事是什么？用"课题分离"分析：哪些是你能控制的，哪些是你不该操心的？'
   },
   {
-    week: 7,
-    title: '反脆弱',
-    author: 'Nassim Taleb',
+    week: 7, title: '反脆弱', author: 'Nassim Taleb', time: '约30分钟读完',
     tags: ['哲学', '风险管理', '思维模型'],
-    time: '约30分钟',
-    plan: [
-      { min: '0-8', tip: '理解「脆弱」「强韧」「反脆弱」三元结构' },
-      { min: '8-18', tip: '理解核心：脆弱的反面不是坚固，而是能从波动中获益' },
-      { min: '18-28', tip: '思考「林迪效应」：一件事物能存在多久，预示了它的生命力' },
-      { min: '28-30', tip: '写下你生活中一个「过度优化」的脆弱系统，如何让它更反脆弱？' }
-    ],
+    summary: 'Taleb 提出了一个颠覆性框架：世界分为三类——脆弱（被混乱摧毁）、强韧（不受影响）、反脆弱（从混乱中获益）。我们习惯于保护系统不受伤害，但真正的智慧是让某些东西能从冲击中变强——就像疫苗、肌肉、免疫系统。',
+    core: '脆弱的反面不是坚固，而是能从混乱、波动、压力中获益。最好的系统不是"不会坏"，而是"能从坏中学习"。',
     quote: '"风会吹灭蜡烛，却能让火越烧越旺。"',
     cite: '— Nassim Taleb',
     insights: [
-      '<strong>脆弱：</strong>秩序被打乱后无法恢复（玻璃杯摔碎）',
-      '<strong>强韧：</strong>不受波动影响（铁球摔不坏）',
-      '<strong>反脆弱：</strong>混乱中成长（免疫系统靠病原体变强）',
-      '<strong>过度优化：</strong>越精密的系统越脆弱（黑天鹅的温床）'
+      { icon: '🥛', title: '脆弱', text: '秩序被打乱后无法恢复。玻璃杯摔碎、精密金融模型崩盘、中央集权系统瓦解。' },
+      { icon: '🪨', title: '强韧', text: '不受波动影响。铁球摔不坏，无论外部如何，自身不变。' },
+      { icon: '🔥', title: '反脆弱', text: '混乱中成长。免疫系统靠病原体变强，肌肉靠压力生长，思维靠辩论深化。' },
+      { icon: '⚙️', title: '过度优化', text: '越精密的系统越脆弱。2008年金融危机的根源是风险模型"过度优化"，忽略了尾部风险。' },
+      { icon: '📏', title: '林迪效应', text: '能存在超过一定时间的事物，未来预期存在时间也更长。经典书籍、古城、老字号餐厅——都是经过时间检验的反脆弱体。' },
+      { icon: '🧪', title: '杠铃策略', text: '把90%资源放在极度安全端，10%放在极度风险端，避免中等风险。类似于"别all in，但保留小仓位博大的"。' }
     ],
-    reflection: '你的人生或工作中，有哪些「玻璃杯」式安排需要替换成更反脆弱的设计？'
+    actions: ['用"林迪效应"选书：优先读经过20年以上检验的经典，新书持保留态度', '把"不能失败"的系统改成"能快速恢复"的系统——允许失败，快速迭代', '生活中的杠铃策略：稳定收入+小比例高风险尝试'],
+    think: '你的人生或工作中，有哪些"玻璃杯式"安排需要换成更反脆弱的设计？'
   },
   {
-    week: 8,
-    title: '助推',
-    author: 'Thaler & Sunstein',
+    week: 8, title: '助推', author: 'Thaler & Sunstein', time: '约25分钟读完',
     tags: ['行为经济学', '政策', '选择设计'],
-    tagClass: 'a',
-    time: '约30分钟',
-    plan: [
-      { min: '0-8', tip: '理解「自由家长制」：可以自由选择，但通过设计引导' },
-      { min: '8-18', tip: '重点理解「默认选项」的巨大影响力' },
-      { min: '18-28', tip: '理解「助推」的6大原则' },
-      { min: '28-30', tip: '思考：你身边有哪些「助推」正在影响你的决策？' }
-    ],
+    summary: 'Thaler（诺贝尔经济学奖得主）和 Sunstein 提出一种温和的干预哲学：政府可以在不限制自由的前提下，通过"选择架构"的设计，让人们做出更理性的决定。这不是强制，而是"轻轻推一把"。',
+    core: '人的选择经常受到环境和默认设置的影响。好的选择架构可以让人们"在不被强迫的情况下，做出更好的选择"。',
     quote: '"助推是一种选择架构，它在不禁止任何选项的情况下，让人们的决策朝着更好的方向倾斜。"',
     cite: '— Thaler & Sunstein',
     insights: [
-      '<strong>默认选项：</strong>大多数人会接受默认（如器官捐献、401k缴费）',
-      '<strong>预期误差：</strong>人们会犯错，系统设计应容许错误',
-      '<strong>理解复杂性：</strong>简化选择，让信息更易获取',
-      '<strong>激励：</strong>金钱激励有效，但非金钱激励（社会激励）往往更强'
+      { icon: '📋', title: '默认选项', text: '大多数人会接受默认。器官捐献、401k养老金、自动加入储蓄计划——默认设置是巨大的行为驱动力。' },
+      { icon: '⚠️', title: '预期误差', text: '人会犯错，系统设计应容许错误。"确认支付"按钮比"取消订阅"更难找——这是故意设计，不是失误。' },
+      { icon: '📊', title: '简化复杂性', text: '信息过载会导致决策瘫痪。好的助推把核心信息突出，降低认知负担。' },
+      { icon: '💰', title: '激励与助推', text: '金钱激励有效，但非金钱激励（社会激励、身份认同）往往更强。"90%的高中生都做了..."比"你应该做"更有效。' },
+      { icon: '🪞', title: '理解错误', text: '先理解人们为什么会做出错误选择，才能设计有效的助推。不是批评愚蠢，而是设计更友好的系统。' },
+      { icon: '⚖️', title: '自由家长制', text: '" nudge"既不是放任（自由主义），也不是强制（家长制），而是"自由家长制"——帮你做出更好的选择，但选择权仍在你手里。' }
     ],
-    reflection: '你在设计产品/流程时，如何用「助推」帮助用户做出更好选择？'
+    actions: ['在设计任何表单/流程时，思考：我的默认设置对用户最友好吗？', '想要养成某个习惯，把它设为默认选项，而非需要主动选择', '当别人做出"愚蠢"决定时，先问：是不是选择架构设计有问题？'],
+    think: '你在设计产品/流程时，有哪些地方可以用"助推"帮助用户做出更好的选择？'
   },
   {
-    week: 9,
-    title: '噪声',
-    author: 'Daniel Kahneman / Olivier Sibony / Cass Sunstein',
+    week: 9, title: '噪声', author: 'Kahneman / Sibony / Sunstein', time: '约28分钟读完',
     tags: ['决策', '行为经济学', '判断'],
-    time: '约30分钟',
-    plan: [
-      { min: '0-8', tip: '区分「偏差」与「噪声」：偏差是平均错误，噪声是个体差异' },
-      { min: '8-18', tip: '理解「水平噪声」「模式噪声」「来源噪声」三种类型' },
-      { min: '18-28', tip: '理解「噪声审查」如何发现组织中的判断不一致' },
-      { min: '28-30', tip: '反思：你最近一次「同一问题不同人给出截然不同答案」是什么时候？' }
-    ],
+    summary: '《思考，快与慢》作者团队的续作。偏差是"所有人共同偏离正确值"，噪声是"同一个问题，不同人给出不同答案"。这本书揭示了一个被忽视的真相：组织中的很多"错误决策"，本质上是噪声——判断的不一致。',
+    core: '决策中的噪声，是可以被量化的无知。减少噪声的方法：用规则替代判断、用算法辅助决策、让决策者互相独立评分后再汇总。',
     quote: '"决策中的噪声，是可以被量化的无知。"',
     cite: '— Kahneman, Sibony & Sunstein',
     insights: [
-      '<strong>偏差：</strong>所有人共同偏离正确值（方向性错误）',
-      '<strong>噪声：</strong>同一个人/情景下，不同判断者给出不同答案',
-      '<strong>噪声审查：</strong>让同一案例被不同人独立评分，发现系统性差异',
-      '<strong>减少噪声：</strong>用规则替代判断、用算法辅助决策、让决策者互相独立'
+      { icon: '⚡', title: '偏差 vs 噪声', text: '偏差是平均错误（所有人往同一个方向偏）。噪声是个体差异（同样情况不同人结论不同）。两个都要关注。' },
+      { icon: '📐', title: '三种噪声', text: '水平噪声（不同人判断基准不同）、模式噪声（同一个人在不同情境下判断不同）、来源噪声（不同类型的错误判断）。' },
+      { icon: '🔬', title: '噪声审查', text: '让同一案例被不同人独立评分，就能发现系统性差异。这是识别组织判断质量的方法。' },
+      { icon: '📉', title: '减少噪声', text: '用规则替代判断；用算法辅助（哪怕简单平均）比纯人工判断更稳定；让决策者独立评分再汇总（防止群体思维）。' },
+      { icon: '👔', title: '组织中的噪声', text: '招聘面试官对同一候选人的评分差异巨大。绩效评估、贷款审批、医疗诊断——都存在大量噪声。' },
+      { icon: '🎯', title: '单一判断不可靠', text: '任何单一的专业判断都是噪声丰富的。解决方案是建立"决策卫生"机制：独立判断→汇总→讨论。' }
     ],
-    reflection: '你所在团队或行业，是否存在「同一case不同人给完全不同的结论」的情况？根源是什么？'
+    actions: ['重要决策不要依赖单一判断——至少收集3个独立视角再汇总', '用"独立评分+平均"替代"会议室讨论投票"——减少群体思维和噪声', '对关键判断追问：其他人会怎么看待这个问题？差异有多大？'],
+    think: '你所在团队，是否存在"同一case不同人给完全不同的结论"的情况？根源是偏差还是噪声？'
   },
   {
-    week: 10,
-    title: '跳出noi时代的思考',
-    author: 'Paul Graham',
-    tags: ['思维', '创业', '独立思考'],
-    tagClass: 'p',
-    time: '约30分钟',
-    plan: [
-      { min: '0-8', tip: '理解「活在未来的你」如何做出超前判断' },
-      { min: '8-18', tip: '理解「好想法的悖论」：好想法往往听起来很傻' },
-      { min: '18-28', tip: '重点读「如何发现新想法」：寻找被忽视的矛盾' },
-      { min: '28-30', tip: '写下你目前工作中最让你不舒服的矛盾——那里藏着好想法' }
-    ],
+    week: 10, title: '黑客与画家', author: 'Paul Graham', time: '约25分钟读完',
+    tags: ['思维', '创业', '创造'],
+    summary: 'Paul Graham 是硅谷顶级孵化器 Y Combinator 的创始人。这本书收录了他最精华的散文，核心观点：创造者（黑客、画家、创业者）的思维方式与传统职业完全不同——他们活在"未来"，创造"新颖"的东西，而非执行"确定"的任务。',
+    core: '好想法在早期听起来都很傻。如果你有一个想法，大多数人都觉得它不对，但你坚信它是对的——这可能是你人生中最重要的时刻。',
     quote: '"如果你发现自己正在做一件听起来很傻的事，不要停，继续做下去。"',
     cite: '— Paul Graham',
     insights: [
-      '<strong>活在未来的观点：</strong>如果某件事现在看起来很荒谬，但你能看到它5年后的样子',
-      '<strong>好想法vs显而易见：</strong>真正有价值的主意往往一开始不被理解',
-      '<strong>发现想法：</strong>关注「什么让你愤怒？」「你希望存在但不存在的东西？」',
-      '<strong>复制vs创造：</strong>复制成熟想法是安全的，但真正的价值在无人区'
+      { icon: '🔮', title: '活在未来的观点', text: '创造者的判断力来自"你能看到未来的样子"。如果某件事现在看起来荒谬，但你相信5年后它是主流——这就是你的优势。' },
+      { icon: '🧪', title: '好想法的悖论', text: '真正有价值的想法在早期看起来都像垃圾。"听起来像好点子"的通常不是——因为如果它显而易见，早就有人做了。' },
+      { icon: '💡', title: '如何发现想法', text: '关注让你愤怒的事（这个世界不应该这样）、你希望存在但不存在的东西、让人感到别扭和不方便的痛点。' },
+      { icon: '🛠️', title: '做 vs 想', text: '不要等"想清楚"再做。在做中想，在想中做。想法需要被现实检验才能进化。' },
+      { icon: '📈', title: '财富是创造的副产品', text: '财富来自为他人创造价值，而非从他人那里拿走价值。专注于解决问题，财富会随之而来。' },
+      { icon: '🎨', title: '独特性是价值的来源', text: '你的独特性就是你的竞争优势。不必模仿"成功模板"，做真实的自己才能创造不可替代的价值。' }
     ],
-    reflection: '你最近在工作中感到最沮丧/荒谬的一件事是什么？换一个角度，它可能是什么机会？'
+    actions: ['每周留出时间做"没有明确目的"的创造——这是灵感来源', '问自己：如果我现在做的事5年后失败了，原因是？', '记录所有"让我愤怒"的时刻——愤怒往往指向未被满足的需求'],
+    think: '你最近在工作中感到最荒谬/沮丧的一件事是什么？换个角度看，它可能是什么机会的信号？'
   },
   {
-    week: 11,
-    title: '深度工作',
-    author: 'Cal Newport',
+    week: 11, title: '深度工作', author: 'Cal Newport', time: '约25分钟读完',
     tags: ['效率', '专注力', '知识工作'],
-    time: '约30分钟',
-    plan: [
-      { min: '0-8', tip: '理解「深度工作」vs「浮浅工作」的本质区别' },
-      { min: '8-18', tip: '理解「深度工作假设」：专注力是21世纪最稀缺的能力' },
-      { min: '18-28', tip: '掌握4种深度工作哲学： monastic / bimodal / rhythmic / journalistic' },
-      { min: '28-30', tip: '设计你的「深度工作日程」：每天固定一段不受干扰的时间' }
-    ],
+    summary: 'Newport（ Georgetown 计算机教授）提出：在知识经济时代，深度工作——无干扰、全神贯注地完成认知密集型任务——是21世纪最稀缺也是最有价值的能力。但现代办公环境和智能设备正在系统性地摧毁我们的专注力。',
+    core: '浮浅工作堆砌得再多，也抵不过一次深度工作产生的价值。你的职业竞争力，取决于你能多深入地思考，而非多忙碌地处理信息。',
     quote: '"深度工作是在无干扰状态下专注进行职业活动，使认知能力达到极限。这种能力正在变得稀少，同时，其在经济中的价值也日益提升。"',
     cite: '— Cal Newport',
     insights: [
-      '<strong>深度工作：</strong>全神贯注、零干扰、产生高认知价值的任务',
-      '<strong>浮浅工作：</strong>低认知要求、频繁被打断、容易被复制',
-      '<strong>最小阻力原则：</strong>我们倾向于做最容易的任务，而非最重要的',
-      '<strong>拥抱无聊：</strong>无法忍受无聊的人无法深度工作'
+      { icon: '🧠', title: '深度工作 vs 浮浅工作', text: '深度工作：全神贯注、零干扰、产生高认知价值。浮浅工作：低认知要求、频繁被打断、容易被复制和替代。' },
+      { icon: '⏰', title: '最小阻力原则', text: '我们倾向于做最容易的任务，而非最重要的。因为容易的任务阻力最小，但往往不是最有价值的。' },
+      { icon: '🏗️', title: '忙碌≠产出', text: '在知识工作中，"看起来很忙"是一种职业病。真正的价值来自产出，而非活动本身。' },
+      { icon: '📵', title: '拥抱无聊', text: '无法忍受无聊（刷手机）的人无法深度工作。大脑需要"什么都不想"的时间来整合信息。' },
+      { icon: '⏱️', title: '深度工作哲学', text: 'Monastic（隐居式）、Bimodal（双模式）、Rhythmic（节奏型）、Journalistic（即兴型）——选择适合你生活方式的。' },
+      { icon: '🎯', title: '刻意练习', text: '深度工作是一种技能，需要练习。刚开始只能维持20分钟，逐步增加到90分钟。' }
     ],
-    reflection: '算一下你上周的「深度工作时间」是多少小时？干扰你最深的是什么？'
+    actions: ['每天留出固定时段（如早8-10点）完全离线——邮件、微信、Slack 全关', '用"90分钟专注单位"规划一天，而非用小时——效率更高', '工作结束后，问自己：今天最重要的产出是什么？'],
+    think: '算一下你上周的"深度工作时间"——真正没有被打扰、全神贯注的时段是多少小时？'
   },
   {
-    week: 12,
-    title: '原则',
-    author: 'Ray Dalio',
+    week: 12, title: '原则', author: 'Ray Dalio', time: '约25分钟读完',
     tags: ['投资', '思维模型', '人生管理'],
-    time: '约30分钟',
-    plan: [
-      { min: '0-8', tip: '理解「极度透明」与「开放思维」的文化基础' },
-      { min: '8-18', tip: '理解「创意择优」：不是民主，也不是独裁，而是最优想法胜出' },
-      { min: '18-28', tip: '理解「痛苦+反思=进步」的进化循环' },
-      { min: '28-30', tip: '写下你人生中3个最大的「失败」，提取其中1条原则' }
-    ],
-    quote: '"我认为最重要的事情是将我们从错误中学习的教训系统化——因为我们都会犯错，最重要的就是从错误中学到什么。"',
+    summary: 'Ray Dalio 是全球最大对冲基金 Bridgewater 的创始人。这本书总结了他40年人生和投资生涯中提炼出的原则——核心是"极度透明"和"创意择优"。他的原则可以用一个公式总结：梦想+现实+决心=成功的生活。',
+    core: '痛苦+反思=进步。没有痛苦的生活是不真实的，但每一次痛苦都是改进的机会——关键是你是否系统性地从错误中提取教训。',
+    quote: '"我认为最重要的事情是将错误中学习的教训系统化——因为我们都会犯错，最重要的就是从错误中学到什么。"',
     cite: '— Ray Dalio',
     insights: [
-      '<strong>痛苦+反思=进步：</strong>没有痛苦就没有成长',
-      '<strong>极度透明：</strong>信息充分透明才能做出最优决策',
-      '<strong>创意择优：</strong>观点的可信度决定话语权，而非职位',
-      '<strong>原则库：</strong>把每次挫折提炼成可复用的原则'
+      { icon: '🔄', title: '痛苦+反思=进步', text: '痛苦是信号，不是惩罚。接受痛苦，快速诊断原因，从中提取教训，然后改进。这是进化的核心循环。' },
+      { icon: '💎', title: '极度透明', text: '信息充分透明才能做出最优决策。隐藏信息的代价往往比暴露错误更大。Bridgewater 开会全程录音，员工可查阅任何人写给任何人的评价。' },
+      { icon: '🏆', title: '创意择优', text: '不是民主（多数人决定），也不是独裁（老板决定），而是最优想法胜出——无论它来自谁。实现方式：让所有人独立思考，评分，汇总。' },
+      { icon: '📝', title: '原则库', text: '把每次挫折提炼成可复用的原则。不是临时应急，而是系统性地积累决策智慧。' },
+      { icon: '🔀', title: '接受现实', text: '不要希望现实是另一个样子。成功来自理解现实、接受现实、改变现实——而非抱怨现实。' },
+      { icon: '🌱', title: '进化', text: '个体的进化是渐进的，但群体的进化可以是指数级的。找到能加速你进化的环境和人，是最重要的人生决策。' }
     ],
-    reflection: '回想一次你做了错误决定但没有深入复盘的场景——如果重来，你会问自己哪3个问题？'
+    actions: ['每次犯错后，强制自己回答三个问题：原因是什么？我吸取了什么教训？如何防止再犯？', '重要决策写下来：我的假设是什么？预期结果是什么？后来验证的结果是什么？', '每周留出15分钟回顾：本周犯的错、得到的教训、下周改进'],
+    think: '回想一次你做了错误决定但没有深入复盘的场景——如果重来，你会问自己哪三个问题？'
   }
 ];
 
-let state = {};
+function load() { try { S = JSON.parse(localStorage.getItem(K)) || {}; } catch { S = {}; } }
+function save() { localStorage.setItem(K, JSON.stringify(S)); }
 
-function load() {
-  try { state = JSON.parse(localStorage.getItem(KEY)) || {}; }
-  catch { state = {}; }
+function toggle(w) {
+  const c = document.getElementById('b' + w);
+  if (!S[w]) S[w] = { done: false, notes: '', open: false };
+  S[w].open = !S[w].open;
+  save(); render();
 }
 
-function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
-
-function toggle(id) {
-  const card = document.getElementById('week-' + id);
-  if (state[id]?.done) {
-    card.classList.toggle('open');
-  } else {
-    state[id] = { done: false, notes: '', opened: true };
-    save();
-    card.classList.add('open');
-    render();
-  }
+function markDone(w) {
+  if (S[w]) S[w].done = true;
+  else S[w] = { done: true, notes: '', open: true };
+  save(); render();
 }
 
-function markDone(week) {
-  if (state[week]?.done) return;
-  state[week] = { ...(state[week] || {}), done: true };
-  save();
-  render();
-}
-
-function updateNotes(week, val) {
-  if (!state[week]) state[week] = { done: false, notes: '' };
-  state[week].notes = val;
-  save();
+function updateNotes(w, v) {
+  if (!S[w]) S[w] = { done: false, notes: '' };
+  S[w].notes = v; save();
 }
 
 function render() {
-  const doneCount = Object.values(state).filter(v => v.done).length;
-  document.getElementById('done-count').textContent = doneCount;
-  document.getElementById('pct').textContent = Math.round(doneCount / TOTAL * 100) + '%';
-  document.getElementById('prog-bar').style.width = (doneCount / TOTAL * 100) + '%';
+  const done = Object.values(S).filter(v => v.done).length;
+  document.getElementById('done').textContent = done;
+  document.getElementById('pct').textContent = Math.round(done/TOTAL*100)+'%';
+  document.getElementById('bar').style.width = done/TOTAL*100+'%';
 
   document.getElementById('app').innerHTML = books.map(b => {
-    const s = state[b.week] || {};
-    const isOpen = s.opened || false;
-    const isDone = s.done || false;
-    const tagClass = b.tagClass ? b.tagClass : '';
-
-    return `
-    <div class="book-week${isDone ? ' done' : ''}${isOpen ? ' open' : ''}" id="week-${b.week}">
-      <div class="week-hd" onclick="toggle(${b.week})">
-        <span class="week-num">第${b.week}周</span>
-        <div class="book-meta">
-          <div class="title">《${b.title}》<span style="font-size:12px;font-weight:400;color:#999"> ${b.author}</span></div>
+    const s = S[b.week] || {};
+    const open = s.open || false;
+    const done = s.done || false;
+    return `<div class="book-card${done?' done':''}${open?' open':''}" id="b${b.week}">
+      <div class="book-hd" onclick="toggle(${b.week})">
+        <span class="wnum">第${b.week}周</span>
+        <div class="book-info">
+          <div class="title"><span class="done-check">✓</span>《${b.title}》<span style="font-size:12px;font-weight:400;color:#999"> ${b.author}</span></div>
           <div class="author">${b.time}</div>
         </div>
-        <span class="done-badge">已完成</span>
-        <span class="week-arrow">▼</span>
+        <span class="arr">▼</span>
       </div>
-      <div class="week-body">
-        <div class="tag-row">
-          ${b.tags.map((t, i) => `<span class="tag${i === 0 && b.tagClass ? ' '+b.tagClass : ''}">${t}</span>`).join('')}
-        </div>
-
-        <div class="quote">"${b.quote.substring(1, b.quote.length-1)}"<cite>${b.cite}</cite></div>
-
-        <div class="plan">
-          <div class="plan-hd">⏱ 30分钟阅读计划</div>
-          <ol>
-            ${b.plan.map(p => `<li><strong>[${p.min}]</strong> ${p.tip}</li>`).join('')}
-          </ol>
-        </div>
-
-        <div class="insights">
-          <div class="insights-hd">💡 核心洞察</div>
-          <ul>
-            ${b.insights.map(i => `<li>${i}</li>`).join('')}
-          </ul>
-        </div>
-
-        <div class="reflect">
-          <div class="reflect-hd">🤔 思考题（30秒写下答案）</div>
-          <p>${b.reflection}</p>
-          <textarea placeholder="写下你的思考..." onchange="updateNotes(${b.week}, this.value)" oninput="this.style.height=this.scrollHeight+'px'">${s.notes || ''}</textarea>
-        </div>
-
-        <button class="comp-btn" onclick="markDone(${b.week})">${isDone ? '' : '✅ 标记为已完成'}</button>
+      <div class="book-bd">
+        <div class="tags">${b.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7">${b.summary}</p>
+        <div class="core"><strong>一句话核心：</strong><p>${b.core}</p></div>
+        <div class="quote-box">"${b.quote.substring(1,b.quote.length-1)}"<cite>${b.cite}</cite></div>
+        <div class="sec-hd">💡 核心洞察</div>
+        ${b.insights.map(i => `<div class="insight-item"><span class="insight-icon">${i.icon}</span><div class="insight-text"><strong>${i.title}</strong>${i.text}</div></div>`).join('')}
+        <div class="action-card"><div class="action-hd">🚀 立刻行动（3选1开始）</div><ul class="action-list">${b.actions.map(a => `<li>${a}</li>`).join('')}</ul></div>
+        <div class="think"><div class="think-hd">🤔 思考题</div><p style="font-size:13px;color:#78350f;margin-bottom:6px">${b.think}</p><textarea placeholder="写下你的思考..." oninput="this.style.height=this.scrollHeight+'px'" onchange="updateNotes(${b.week},this.value)">${s.notes||''}</textarea></div>
+        <button class="mark-btn" onclick="markDone(${b.week})">${done?'':'✅ 标记为已完成'}</button>
       </div>
     </div>`;
   }).join('');
 }
 
-load();
-render();
+load(); render();
 </script>
 
 </body>
