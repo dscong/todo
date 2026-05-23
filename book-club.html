@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每周30分钟 · 精读好书</title>
+<style>
+  :root {
+    --bg: #f5f0eb;
+    --card: #fff;
+    --primary: #7c3aed;
+    --primary-dark: #6d28d9;
+    --primary-light: #ede9fe;
+    --accent: #059669;
+    --accent-light: #d1fae5;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e5e0d8;
+    --shadow: 0 4px 20px rgba(0,0,0,.07);
+    --r: 14px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 15px;
+  }
+
+  /* header */
+  .header {
+    background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
+    color: #fff;
+    text-align: center;
+    padding: 48px 20px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 24px rgba(124,58,237,.3);
+  }
+  .header h1 { font-size: clamp(22px,4vw,30px); font-weight: 800; margin-bottom: 6px; letter-spacing: -.3px; }
+  .header p { font-size: 13px; opacity: .85; max-width: 440px; margin: 0 auto 20px; }
+  .hstats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .hstats div {
+    background: rgba(255,255,255,.18);
+    padding: 8px 18px;
+    border-radius: 10px;
+    text-align: center;
+    min-width: 80px;
+  }
+  .hstats .n { font-size: 24px; font-weight: 800; }
+  .hstats .l { font-size: 11px; opacity: .7; }
+  .prog-wrap {
+    max-width: 400px;
+    margin: 14px auto 0;
+    background: rgba(255,255,255,.25);
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .prog-fill {
+    height: 100%;
+    background: #fff;
+    border-radius: 10px;
+    transition: width .6s ease;
+    width: 0%;
+  }
+  .reset-btn {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: rgba(255,255,255,.15);
+    border: none;
+    color: rgba(255,255,255,.7);
+    font-size: 11px;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .reset-btn:hover { background: rgba(255,255,255,.3); color: #fff; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  /* book card */
+  .book-week {
+    background: var(--card);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+    overflow: hidden;
+    transition: box-shadow .2s;
+  }
+  .book-week:hover { box-shadow: 0 6px 32px rgba(0,0,0,.1); }
+  .book-week.done { border-color: #a7f3d0; }
+
+  .week-hd {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    cursor: pointer;
+    user-select: none;
+    transition: background .15s;
+  }
+  .week-hd:hover { background: #faf8f5; }
+  .book-week.open .week-hd { background: var(--primary-light); }
+  .week-num {
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--primary);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .book-week.done .week-num { background: var(--accent); }
+  .book-meta { flex: 1; }
+  .book-meta .title { font-size: 15px; font-weight: 700; }
+  .book-meta .author { font-size: 12px; color: var(--muted); }
+  .book-week.done .book-meta .title { text-decoration: line-through; color: var(--muted); }
+  .done-badge {
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 600;
+    display: none;
+  }
+  .book-week.done .done-badge { display: block; }
+  .week-arrow {
+    font-size: 16px;
+    color: var(--muted);
+    transition: transform .2s;
+    flex-shrink: 0;
+  }
+  .book-week.open .week-arrow { transform: rotate(180deg); }
+
+  .week-body { display: none; padding: 4px 18px 18px; }
+  .book-week.open .week-body { display: block; }
+
+  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0 12px; }
+  .tag {
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 5px;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+  }
+  .tag.p { background: #fef3c7; color: #92400e; }
+  .tag.a { background: #fce7f3; color: #9d174d; }
+  .tag.t { background: var(--accent-light); color: #065f46; }
+
+  /* reading plan */
+  .plan {
+    background: #faf8f5;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    border: 1px solid var(--border);
+  }
+  .plan-hd { font-size: 13px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .plan ol {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .plan ol li { font-size: 13px; color: var(--muted); }
+  .plan ol li strong { color: var(--text); font-size: 14px; }
+
+  /* key insights */
+  .insights { margin-bottom: 14px; }
+  .insights-hd { font-size: 13px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
+  .insights ul {
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .insights ul li { font-size: 13px; color: var(--muted); padding-left: 4px; }
+  .insights ul li strong { color: var(--text); }
+
+  /* quote */
+  .quote {
+    border-left: 3px solid var(--primary);
+    padding: 10px 14px;
+    background: var(--primary-light);
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 14px;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--primary-dark);
+  }
+  .quote cite { font-size: 12px; font-style: normal; display: block; margin-top: 4px; color: var(--muted); }
+
+  /* reflection */
+  .reflect {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .reflect-hd { font-size: 13px; font-weight: 700; color: #92400e; margin-bottom: 8px; }
+  .reflect p { font-size: 13px; color: #78350f; margin-bottom: 8px; }
+  .reflect textarea {
+    width: 100%;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 70px;
+    outline: none;
+    background: #fff;
+    color: var(--text);
+  }
+  .reflect textarea:focus { border-color: var(--primary); }
+
+  /* complete btn */
+  .comp-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    background: var(--primary);
+    color: #fff;
+    transition: background .15s;
+  }
+  .comp-btn:hover { background: var(--primary-dark); }
+  .book-week.done .comp-btn { background: var(--accent); cursor: default; }
+  .book-week.done .comp-btn::after { content: ' ✓ 已完成'; }
+
+  /* intro section */
+  .intro {
+    background: var(--card);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    padding: 20px 22px;
+    margin-bottom: 24px;
+  }
+  .intro h2 { font-size: 17px; margin-bottom: 8px; }
+  .intro p { font-size: 13px; color: var(--muted); }
+  .intro p strong { color: var(--text); }
+
+  footer { text-align: center; padding: 30px 20px; color: var(--muted); font-size: 12px; }
+
+  @media (max-width: 600px) {
+    .header { padding: 32px 14px 24px; }
+    .hstats { gap: 10px; }
+    .container { padding: 14px 10px 50px; }
+    .week-hd, .week-body { padding-left: 14px; padding-right: 14px; }
+    .plan, .reflect, .quote { margin-left: 0; margin-right: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <button class="reset-btn" onclick="if(confirm('重置所有阅读进度？')){localStorage.removeItem('book-club');location.reload()}">重置</button>
+  <h1>📚 每周30分钟 · 精读好书</h1>
+  <p>每本书只需 30 分钟 · 掌握一个改变认知的核心概念</p>
+  <div class="hstats">
+    <div><div class="n" id="done-count">0</div><div class="l">已完成</div></div>
+    <div><div class="n" id="total-books">12</div><div class="l">书单总数</div></div>
+    <div><div class="n" id="pct">0%</div><div class="l">完成率</div></div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="prog-bar"></div></div>
+</div>
+
+<div class="container" id="app"></div>
+
+<footer>每周30分钟精读 · 2026 · 用思想塑造更好的自己</footer>
+
+<script>
+const KEY = 'book-club';
+const TOTAL = 12;
+
+const books = [
+  {
+    week: 1,
+    title: '影响力',
+    author: 'Robert Cialdini',
+    tags: ['心理学', '说服力', '商业'],
+    time: '约30分钟',
+    plan: [
+      { min: '0-8', tip: '先快速翻阅全书框架（推荐跳读第3、4章）' },
+      { min: '8-18', tip: '重点读「互惠」「社会认同」「承诺与一致」三大原则' },
+      { min: '18-28', tip: '思考：这三条如何用在你自己的工作/生活中？' },
+      { min: '28-30', tip: '写下1条最触动你的洞察 + 下周行动' }
+    ],
+    quote: '"影响力的本质是：在某些情境下，人们的行为完全取决于事先预设好的固定机械式反应。"',
+    cite: '— Robert Cialdini',
+    insights: [
+      '<strong>互惠原理：</strong>给予小恩惠，往往能换来大回报',
+      '<strong>社会认同：</strong>人在不确定时会模仿他人的行为',
+      '<strong>承诺与一致：</strong>一旦公开承诺，人会努力保持一致',
+      '<strong>稀缺：</strong>稀缺感会大幅提升物品的感知价值'
+    ],
+    reflection: '想想你最近一次被人「套路」说服的经历——用到了影响力的哪条原理？'
+  },
+  {
+    week: 2,
+    title: '思考，快与慢',
+    author: 'Daniel Kahneman',
+    tags: ['行为经济学', '决策', '认知'],
+    time: '约30分钟',
+    plan: [
+      { min: '0-8', tip: '理解「系统1/系统2」的核心框架' },
+      { min: '8-18', tip: '重点读「锚定效应」「可得性启发」' },
+      { min: '18-28', tip: '对照思考：你有哪些常见的思维陷阱？' },
+      { min: '28-30', tip: '写出你最容易犯的认知偏误' }
+    ],
+    quote: '"我们对自己未知的事物一无所知。我们意识不到自己其实并不思考。"',
+    cite: '— Daniel Kahneman',
+    insights: [
+      '<strong>系统1（快思考）：</strong>自动、情绪化、直觉驱动',
+      '<strong>系统2（慢思考）：</strong>理性、逻辑、深思熟虑',
+      '<strong>锚定效应：</strong>先看到什么数字，会影响后续判断',
+      '<strong>损失厌恶：</strong>失去100元的痛苦 > 得到100元快乐'
+    ],
+    reflection: '你上一次「脑子一热」做的决定是什么？现在回头看，系统1还是系统2在主导？'
+  },
+  {
+    week: 3,
+    title: '学会提问',
+    author: 'Neil Browne & Stuart Keeley',
+    tags: ['批判思维', '逻辑', '提问'],
+    time: '约30分钟',
+    plan: [
+      { min: '0-8', tip: '理解「海绵式思维」vs「淘金式思维」的区别' },
+      { min: '8-18', tip: '学会对结论追问「证据是什么？」「如何得出？」' },
+      { min: '18-28', tip: '识别11种批判性思维问题，特别是「价值观假设」' },
+      { min: '28-30', tip: '找一个你坚信的观点，试着用批判性问题审视它' }
+    ],
+    quote: '"一个答案质量的高低，取决于问题质量的高低。"',
+    cite: '— Neil Browne',
+    insights: [
+      '<strong>海绵式思维：</strong>被动吸收信息，不加甄别',
+      '<strong>淘金式思维：</strong>主动提问、质疑、筛选信息',
+      '<strong>论题 vs 结论：</strong>先确认结论，再找支撑理由',
+      '<strong>价值观假设：</strong>每个论证背后都有未被说出的价值观'
+    ],
+    reflection: '选一篇你最近在朋友圈/公众号读到的观点，列出它省略了哪些「理所当然」的假设？'
+  },
+  {
+    week: 4,
+    title: '设计心理学',
+    author: 'Don Norman',
+    tags: ['设计思维', '用户体验', '产品'],
+    tagClass: 't',
+    time: '约30分钟',
+    plan: [
+      { min: '0-8', tip: '理解「示能」「映射」「反馈」「概念模型」四大原则' },
+      { min: '8-18', tip: '思考日常用品的设计：哪些做得好？哪些让人困惑？' },
+      { min: '18-28', tip: '重点理解：为什么「以用户为中心的设计」如此重要' },
+      { min: '28-30', tip: '找一个你常用的产品，分析它的概念模型是否清晰' }
+    ],
+    quote: '"好的设计比糟糕的设计更难被注意到，因为好的设计会让我们专注于完成任务本身，而非工具本身。"',
+    cite: '— Don Norman',
+    insights: [
+      '<strong>示能（Affordance）：</strong>物品本身暗示的使用方式',
+      '<strong>映射：</strong>控制与效果之间的空间对应关系',
+      '<strong>反馈：</strong>每个动作都应即时得到系统反馈',
+      '<strong>概念模型：</strong>用户脑中关于系统运作方式的简化图景'
+    ],
+    reflection: '你手机里哪个App的某个交互最让你困惑？用Norman四原则分析一下问题在哪里。'
+  },
+  {
+    week: 5,
+    title: '心流',
+    author: 'Mihaly Csikszentmihalyi',
+    tags: ['心理学', '效率', '幸福'],
+    time: '约30分钟',
+    plan: [
+      { min: '0-8', tip: '理解「心流」的8个特征条件' },
+      { min: '8-18', tip: '理解「挑战度」与「技能水平」的平衡关系图' },
+      { min: '18-28', tip: '思考：你上一次进入心流状态是什么时候？' },
+      { min: '28-30', tip: '设计你下周的「心流时段」：固定时间+排除干扰+明确目标' }
+    ],
+    quote: '"控制意识最优雅的方式，是让它专注于生活中积极正向的体验。"',
+    cite: '— Mihaly Csikszentmihalyi',
+    insights: [
+      '<strong>心流8特征：</strong>全神贯注、知行合一、思绪清晰、得失心消失、时间扭曲、自我意识消失、发自内心的愉悦',
+      '<strong>挑战-技能平衡：</strong>太无聊→焦虑，太难→焦虑；恰到好处→心流',
+      '<strong>清晰目标：</strong>心流发生在目标明确、可量化的时候',
+      '<strong>内在动机：</strong>真正持久的动力来自过程本身，而非外部奖励'
+    ],
+    reflection: '用「挑战-技能」框架分析你上周的工作状态——大多数时间落在哪个区域？'
+  },
+  {
+    week: 6,
+    title: '被讨厌的勇气',
+    author: '岸见一郎 & 古贺史健',
+    tags: ['心理学', '哲学', '自我成长'],
+    tagClass: 'p',
+    time: '约30分钟',
+    plan: [
+      { min: '0-8', tip: '理解阿德勒心理学的核心：「目的论」而非「原因论」' },
+      { min: '8-18', tip: '理解「课题分离」：分清什么是你的事，什么是别人的事' },
+      { min: '18-28', tip: '理解「共同体感觉」：人际关系中的归属感来源' },
+      { min: '28-30', tip: '找一个你一直在逃避的任务，问自己：「我真的在意，还是在用「害怕失败」当借口？」' }
+    ],
+    quote: '"所谓的自由，就是敢于被别人讨厌的勇气。"',
+    cite: '— 岸见一郎',
+    insights: [
+      '<strong>原因论：</strong>过去决定现在（弗洛伊德）',
+      '<strong>目的论：</strong>现在是为某个目的服务（阿德勒）',
+      '<strong>课题分离：</strong>我不为别人的情绪负责，别人也不该干涉我的选择',
+      '<strong>共同体感觉：</strong>在关系中寻找归属感，而非通过竞争确立优越感'
+    ],
+    reflection: '选一个你目前纠结的选择，用「课题分离」分析：这是你的事，还是别人的事？'
+  },
+  {
+    week: 7,
+    title: '反脆弱',
+    author: 'Nassim Taleb',
+    tags: ['哲学', '风险管理', '思维模型'],
+    time: '约30分钟',
+    plan: [
+      { min: '0-8', tip: '理解「脆弱」「强韧」「反脆弱」三元结构' },
+      { min: '8-18', tip: '理解核心：脆弱的反面不是坚固，而是能从波动中获益' },
+      { min: '18-28', tip: '思考「林迪效应」：一件事物能存在多久，预示了它的生命力' },
+      { min: '28-30', tip: '写下你生活中一个「过度优化」的脆弱系统，如何让它更反脆弱？' }
+    ],
+    quote: '"风会吹灭蜡烛，却能让火越烧越旺。"',
+    cite: '— Nassim Taleb',
+    insights: [
+      '<strong>脆弱：</strong>秩序被打乱后无法恢复（玻璃杯摔碎）',
+      '<strong>强韧：</strong>不受波动影响（铁球摔不坏）',
+      '<strong>反脆弱：</strong>混乱中成长（免疫系统靠病原体变强）',
+      '<strong>过度优化：</strong>越精密的系统越脆弱（黑天鹅的温床）'
+    ],
+    reflection: '你的人生或工作中，有哪些「玻璃杯」式安排需要替换成更反脆弱的设计？'
+  },
+  {
+    week: 8,
+    title: '助推',
+    author: 'Thaler & Sunstein',
+    tags: ['行为经济学', '政策', '选择设计'],
+    tagClass: 'a',
+    time: '约30分钟',
+    plan: [
+      { min: '0-8', tip: '理解「自由家长制」：可以自由选择，但通过设计引导' },
+      { min: '8-18', tip: '重点理解「默认选项」的巨大影响力' },
+      { min: '18-28', tip: '理解「助推」的6大原则' },
+      { min: '28-30', tip: '思考：你身边有哪些「助推」正在影响你的决策？' }
+    ],
+    quote: '"助推是一种选择架构，它在不禁止任何选项的情况下，让人们的决策朝着更好的方向倾斜。"',
+    cite: '— Thaler & Sunstein',
+    insights: [
+      '<strong>默认选项：</strong>大多数人会接受默认（如器官捐献、401k缴费）',
+      '<strong>预期误差：</strong>人们会犯错，系统设计应容许错误',
+      '<strong>理解复杂性：</strong>简化选择，让信息更易获取',
+      '<strong>激励：</strong>金钱激励有效，但非金钱激励（社会激励）往往更强'
+    ],
+    reflection: '你在设计产品/流程时，如何用「助推」帮助用户做出更好选择？'
+  },
+  {
+    week: 9,
+    title: '噪声',
+    author: 'Daniel Kahneman / Olivier Sibony / Cass Sunstein',
+    tags: ['决策', '行为经济学', '判断'],
+    time: '约30分钟',
+    plan: [
+      { min: '0-8', tip: '区分「偏差」与「噪声」：偏差是平均错误，噪声是个体差异' },
+      { min: '8-18', tip: '理解「水平噪声」「模式噪声」「来源噪声」三种类型' },
+      { min: '18-28', tip: '理解「噪声审查」如何发现组织中的判断不一致' },
+      { min: '28-30', tip: '反思：你最近一次「同一问题不同人给出截然不同答案」是什么时候？' }
+    ],
+    quote: '"决策中的噪声，是可以被量化的无知。"',
+    cite: '— Kahneman, Sibony & Sunstein',
+    insights: [
+      '<strong>偏差：</strong>所有人共同偏离正确值（方向性错误）',
+      '<strong>噪声：</strong>同一个人/情景下，不同判断者给出不同答案',
+      '<strong>噪声审查：</strong>让同一案例被不同人独立评分，发现系统性差异',
+      '<strong>减少噪声：</strong>用规则替代判断、用算法辅助决策、让决策者互相独立'
+    ],
+    reflection: '你所在团队或行业，是否存在「同一case不同人给完全不同的结论」的情况？根源是什么？'
+  },
+  {
+    week: 10,
+    title: '跳出noi时代的思考',
+    author: 'Paul Graham',
+    tags: ['思维', '创业', '独立思考'],
+    tagClass: 'p',
+    time: '约30分钟',
+    plan: [
+      { min: '0-8', tip: '理解「活在未来的你」如何做出超前判断' },
+      { min: '8-18', tip: '理解「好想法的悖论」：好想法往往听起来很傻' },
+      { min: '18-28', tip: '重点读「如何发现新想法」：寻找被忽视的矛盾' },
+      { min: '28-30', tip: '写下你目前工作中最让你不舒服的矛盾——那里藏着好想法' }
+    ],
+    quote: '"如果你发现自己正在做一件听起来很傻的事，不要停，继续做下去。"',
+    cite: '— Paul Graham',
+    insights: [
+      '<strong>活在未来的观点：</strong>如果某件事现在看起来很荒谬，但你能看到它5年后的样子',
+      '<strong>好想法vs显而易见：</strong>真正有价值的主意往往一开始不被理解',
+      '<strong>发现想法：</strong>关注「什么让你愤怒？」「你希望存在但不存在的东西？」',
+      '<strong>复制vs创造：</strong>复制成熟想法是安全的，但真正的价值在无人区'
+    ],
+    reflection: '你最近在工作中感到最沮丧/荒谬的一件事是什么？换一个角度，它可能是什么机会？'
+  },
+  {
+    week: 11,
+    title: '深度工作',
+    author: 'Cal Newport',
+    tags: ['效率', '专注力', '知识工作'],
+    time: '约30分钟',
+    plan: [
+      { min: '0-8', tip: '理解「深度工作」vs「浮浅工作」的本质区别' },
+      { min: '8-18', tip: '理解「深度工作假设」：专注力是21世纪最稀缺的能力' },
+      { min: '18-28', tip: '掌握4种深度工作哲学： monastic / bimodal / rhythmic / journalistic' },
+      { min: '28-30', tip: '设计你的「深度工作日程」：每天固定一段不受干扰的时间' }
+    ],
+    quote: '"深度工作是在无干扰状态下专注进行职业活动，使认知能力达到极限。这种能力正在变得稀少，同时，其在经济中的价值也日益提升。"',
+    cite: '— Cal Newport',
+    insights: [
+      '<strong>深度工作：</strong>全神贯注、零干扰、产生高认知价值的任务',
+      '<strong>浮浅工作：</strong>低认知要求、频繁被打断、容易被复制',
+      '<strong>最小阻力原则：</strong>我们倾向于做最容易的任务，而非最重要的',
+      '<strong>拥抱无聊：</strong>无法忍受无聊的人无法深度工作'
+    ],
+    reflection: '算一下你上周的「深度工作时间」是多少小时？干扰你最深的是什么？'
+  },
+  {
+    week: 12,
+    title: '原则',
+    author: 'Ray Dalio',
+    tags: ['投资', '思维模型', '人生管理'],
+    time: '约30分钟',
+    plan: [
+      { min: '0-8', tip: '理解「极度透明」与「开放思维」的文化基础' },
+      { min: '8-18', tip: '理解「创意择优」：不是民主，也不是独裁，而是最优想法胜出' },
+      { min: '18-28', tip: '理解「痛苦+反思=进步」的进化循环' },
+      { min: '28-30', tip: '写下你人生中3个最大的「失败」，提取其中1条原则' }
+    ],
+    quote: '"我认为最重要的事情是将我们从错误中学习的教训系统化——因为我们都会犯错，最重要的就是从错误中学到什么。"',
+    cite: '— Ray Dalio',
+    insights: [
+      '<strong>痛苦+反思=进步：</strong>没有痛苦就没有成长',
+      '<strong>极度透明：</strong>信息充分透明才能做出最优决策',
+      '<strong>创意择优：</strong>观点的可信度决定话语权，而非职位',
+      '<strong>原则库：</strong>把每次挫折提炼成可复用的原则'
+    ],
+    reflection: '回想一次你做了错误决定但没有深入复盘的场景——如果重来，你会问自己哪3个问题？'
+  }
+];
+
+let state = {};
+
+function load() {
+  try { state = JSON.parse(localStorage.getItem(KEY)) || {}; }
+  catch { state = {}; }
+}
+
+function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
+
+function toggle(id) {
+  const card = document.getElementById('week-' + id);
+  if (state[id]?.done) {
+    card.classList.toggle('open');
+  } else {
+    state[id] = { done: false, notes: '', opened: true };
+    save();
+    card.classList.add('open');
+    render();
+  }
+}
+
+function markDone(week) {
+  if (state[week]?.done) return;
+  state[week] = { ...(state[week] || {}), done: true };
+  save();
+  render();
+}
+
+function updateNotes(week, val) {
+  if (!state[week]) state[week] = { done: false, notes: '' };
+  state[week].notes = val;
+  save();
+}
+
+function render() {
+  const doneCount = Object.values(state).filter(v => v.done).length;
+  document.getElementById('done-count').textContent = doneCount;
+  document.getElementById('pct').textContent = Math.round(doneCount / TOTAL * 100) + '%';
+  document.getElementById('prog-bar').style.width = (doneCount / TOTAL * 100) + '%';
+
+  document.getElementById('app').innerHTML = books.map(b => {
+    const s = state[b.week] || {};
+    const isOpen = s.opened || false;
+    const isDone = s.done || false;
+    const tagClass = b.tagClass ? b.tagClass : '';
+
+    return `
+    <div class="book-week${isDone ? ' done' : ''}${isOpen ? ' open' : ''}" id="week-${b.week}">
+      <div class="week-hd" onclick="toggle(${b.week})">
+        <span class="week-num">第${b.week}周</span>
+        <div class="book-meta">
+          <div class="title">《${b.title}》<span style="font-size:12px;font-weight:400;color:#999"> ${b.author}</span></div>
+          <div class="author">${b.time}</div>
+        </div>
+        <span class="done-badge">已完成</span>
+        <span class="week-arrow">▼</span>
+      </div>
+      <div class="week-body">
+        <div class="tag-row">
+          ${b.tags.map((t, i) => `<span class="tag${i === 0 && b.tagClass ? ' '+b.tagClass : ''}">${t}</span>`).join('')}
+        </div>
+
+        <div class="quote">"${b.quote.substring(1, b.quote.length-1)}"<cite>${b.cite}</cite></div>
+
+        <div class="plan">
+          <div class="plan-hd">⏱ 30分钟阅读计划</div>
+          <ol>
+            ${b.plan.map(p => `<li><strong>[${p.min}]</strong> ${p.tip}</li>`).join('')}
+          </ol>
+        </div>
+
+        <div class="insights">
+          <div class="insights-hd">💡 核心洞察</div>
+          <ul>
+            ${b.insights.map(i => `<li>${i}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div class="reflect">
+          <div class="reflect-hd">🤔 思考题（30秒写下答案）</div>
+          <p>${b.reflection}</p>
+          <textarea placeholder="写下你的思考..." onchange="updateNotes(${b.week}, this.value)" oninput="this.style.height=this.scrollHeight+'px'">${s.notes || ''}</textarea>
+        </div>
+
+        <button class="comp-btn" onclick="markDone(${b.week})">${isDone ? '' : '✅ 标记为已完成'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+load();
+render();
+</script>
+
+</body>
+</html>
