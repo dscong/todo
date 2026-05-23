@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品速成 · 30天追踪计划</title>
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --card: #fff;
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --primary-light: #eef2ff;
+    --accent: #10b981;
+    --accent-light: #d1fae5;
+    --orange: #f59e0b;
+    --orange-light: #fef3c7;
+    --red: #ef4444;
+    --red-light: #fee2e2;
+    --purple: #8b5cf6;
+    --purple-light: #ede9fe;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --shadow: 0 4px 24px rgba(0,0,0,.07);
+    --r: 14px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  /* ---- HEADER ---- */
+  .header {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #fff;
+    padding: 44px 20px 36px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(99,102,241,.3);
+  }
+  .header h1 { font-size: clamp(22px,4vw,32px); font-weight: 800; letter-spacing: -.5px; margin-bottom: 6px; }
+  .header p { font-size: 14px; opacity: .85; max-width: 500px; margin: 0 auto 16px; }
+  .header-stats {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .header-stats .stat {
+    background: rgba(255,255,255,.18);
+    padding: 10px 20px;
+    border-radius: 10px;
+    min-width: 90px;
+  }
+  .header-stats .stat .num { font-size: 26px; font-weight: 800; line-height: 1; }
+  .header-stats .stat .lbl { font-size: 11px; opacity: .75; margin-top: 2px; }
+  .progress-bar-wrap {
+    max-width: 480px;
+    margin: 14px auto 0;
+    background: rgba(255,255,255,.25);
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: #fff;
+    border-radius: 10px;
+    transition: width .5s ease;
+    width: 0%;
+  }
+  .reset-btn {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: rgba(255,255,255,.15);
+    border: none;
+    color: rgba(255,255,255,.7);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 5px 12px;
+    border-radius: 6px;
+    transition: all .15s;
+  }
+  .reset-btn:hover { background: rgba(255,255,255,.3); color: #fff; }
+
+  /* ---- LAYOUT ---- */
+  .container { max-width: 860px; margin: 0 auto; padding: 20px 16px 60px; }
+
+  /* ---- SECTION ---- */
+  .sec { margin-bottom: 32px; }
+  .sec-hd {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+  .sec-hd .emoji { font-size: 20px; }
+
+  /* ---- WEEK CARD ---- */
+  .week {
+    background: var(--card);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .week-hd {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    cursor: pointer;
+    user-select: none;
+    transition: background .15s;
+  }
+  .week-hd:hover { background: #fafbff; }
+  .week-tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 6px;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .wt-green { background: var(--accent); }
+  .wt-orange { background: var(--orange); }
+  .wt-red { background: var(--red); }
+  .wt-purple { background: var(--purple); }
+  .week-title { font-size: 15px; font-weight: 600; flex: 1; }
+  .week-meta { font-size: 12px; color: var(--text-muted); margin-right: 8px; }
+  .week-arrow { color: var(--text-muted); font-size: 16px; transition: transform .2s; }
+  .week.open .week-arrow { transform: rotate(180deg); }
+  .week.open .week-hd { background: var(--primary-light); }
+
+  .week-bd { display: none; padding: 4px 18px 16px; }
+  .week.open .week-bd { display: block; }
+
+  /* ---- DAY ROW ---- */
+  .day {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .day:last-child { border-bottom: none; }
+  .day-check {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--primary);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .day-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    background: var(--primary-light);
+    padding: 2px 8px;
+    border-radius: 5px;
+    white-space: nowrap;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .day.done .day-label { background: var(--accent-light); color: #065f46; text-decoration: line-through; }
+  .day-content { flex: 1; }
+  .day-content .dc-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .day-content .dc-desc { font-size: 13px; color: var(--text-muted); }
+  .day.done .dc-title { text-decoration: line-through; color: var(--text-muted); }
+  .day-links { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .day-links a {
+    font-size: 12px;
+    color: var(--primary);
+    text-decoration: none;
+    background: var(--primary-light);
+    padding: 2px 8px;
+    border-radius: 4px;
+    transition: all .1s;
+  }
+  .day-links a:hover { background: #ddd6fe; }
+  .day-tag {
+    font-size: 11px;
+    padding: 1px 7px;
+    border-radius: 4px;
+    background: var(--primary-light);
+    color: var(--primary);
+  }
+  .day-tag.paper { background: var(--orange-light); color: #92400e; }
+  .day-tag.proj { background: var(--purple-light); color: #6d28d9; }
+
+  /* ---- NEWS ---- */
+  .news-src-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .news-src {
+    font-size: 12px;
+    padding: 5px 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: all .15s;
+  }
+  .news-src:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary-light); }
+
+  .news-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .news-card:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+  .news-date {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    padding-top: 3px;
+    min-width: 58px;
+  }
+  .news-body { flex: 1; }
+  .news-body h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .news-body p { font-size: 13px; color: var(--text-muted); }
+  .news-tags { margin-top: 4px; display: flex; gap: 4px; }
+  .news-tags span {
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: #f1f5f9;
+    color: var(--text-muted);
+  }
+
+  /* ---- PAPERS ---- */
+  .week-papers-hd {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 20px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .paper {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    transition: all .15s;
+  }
+  .paper:hover { box-shadow: var(--shadow); }
+  .paper-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 5px; }
+  .paper-meta span {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .pm-conf { background: #e0e7ff; color: #3730a3; }
+  .pm-arxiv { background: #fef3c7; color: #92400e; }
+  .pm-industry { background: #fce7f3; color: #9d174d; }
+  .paper h4 { font-size: 14px; margin-bottom: 3px; }
+  .paper h4 a { color: var(--text); text-decoration: none; }
+  .paper h4 a:hover { color: var(--primary); }
+  .paper .authors { font-size: 12px; color: var(--text-muted); margin-bottom: 3px; }
+  .paper .abstract {
+    font-size: 13px;
+    color: var(--text-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .paper-links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .paper-links a {
+    font-size: 12px;
+    color: var(--primary);
+    text-decoration: none;
+    padding: 2px 8px;
+    background: var(--primary-light);
+    border-radius: 4px;
+  }
+  .paper-links a:hover { background: #ddd6fe; }
+  .paper takeaway {
+    margin-top: 8px;
+    padding: 10px 12px;
+    background: var(--primary-light);
+    border-left: 3px solid var(--primary);
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+  }
+  .paper takeaway strong { display: block; margin-bottom: 2px; font-size: 12px; color: var(--primary-dark); }
+
+  /* quick reads */
+  .quick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 8px; }
+  .quick-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    transition: all .15s;
+  }
+  .quick-card:hover { box-shadow: var(--shadow); }
+  .quick-card h5 { font-size: 13px; margin-bottom: 2px; }
+  .quick-card p { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .quick-card a { font-size: 12px; color: var(--primary); text-decoration: none; }
+  .quick-card a:hover { text-decoration: underline; }
+
+  /* ---- TIMELINE ---- */
+  .timeline { position: relative; padding-left: 24px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 0; bottom: 0;
+    width: 2px; background: var(--border);
+  }
+  .ti {
+    position: relative; margin-bottom: 18px; padding-left: 14px;
+  }
+  .ti::before {
+    content: ''; position: absolute; left: -20px; top: 5px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--primary); border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--primary);
+  }
+  .ti.done::before { background: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+  .ti .ti-time { font-size: 11px; color: var(--text-muted); }
+  .ti .ti-title { font-size: 14px; font-weight: 600; }
+  .ti .ti-desc { font-size: 12px; color: var(--text-muted); }
+
+  /* ---- FOOTER ---- */
+  footer { text-align: center; padding: 30px 20px; color: var(--text-muted); font-size: 12px; }
+  footer a { color: var(--primary); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .header { padding: 30px 14px 24px; }
+    .header-stats { gap: 12px; }
+    .header-stats .stat { padding: 8px 14px; min-width: 70px; }
+    .header-stats .stat .num { font-size: 20px; }
+    .container { padding: 14px 10px 50px; }
+    .week-hd { padding: 12px 14px; }
+    .week-bd { padding: 4px 14px 12px; }
+    .news-src { font-size: 11px; padding: 4px 8px; }
+    .quick-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <button class="reset-btn" onclick="if(confirm('重置所有进度？')){localStorage.removeItem('ai-course');location.reload()}">重置进度</button>
+  <h1>🤖 AI 产品速成 · 30天追踪计划</h1>
+  <p>课程大纲 · 论文精读 · AI 新闻 · 每日打卡</p>
+  <div class="header-stats">
+    <div class="stat">
+      <div class="num" id="stat-done">0</div>
+      <div class="lbl">已完成天数</div>
+    </div>
+    <div class="stat">
+      <div class="num" id="stat-pct">0%</div>
+      <div class="lbl">总进度</div>
+    </div>
+    <div class="stat">
+      <div class="num" id="stat-week">0/4</div>
+      <div class="lbl">本周进度</div>
+    </div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="main-progress"></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ===== COURSE OUTLINE ===== -->
+  <div class="sec">
+    <div class="sec-hd"><span class="emoji">📚</span> 课程大纲</div>
+
+    <!-- Week 1 -->
+    <div class="week open" id="week-1">
+      <div class="week-hd" onclick="toggleWeek('week-1')">
+        <span class="week-tag wt-green">第1周</span>
+        <span class="week-title">AI 基础与产品思维</span>
+        <span class="week-meta" id="week1-meta">0/7 完成</span>
+        <span class="week-arrow">▼</span>
+      </div>
+      <div class="week-bd">
+        <div class="day" data-day="1"><input type="checkbox" class="day-check" onclick="toggleDay(1)"><span class="day-label">Day 1</span><div class="day-content"><div class="dc-title">AI 产品全景概览</div><div class="dc-desc">AI PM vs 传统 PM · 2026 行业格局 · 核心能力模型</div><div class="day-links"><a href="https://catalog.skills.network/learning_path/254/" target="_blank">IBM AI PM</a><a href="https://www.mygreatlearning.com/academy/learn-for-free/courses/ai-product-manager-roles-skills-and-responsibilities" target="_blank">Great Learning 免费</a></div></div></div>
+        <div class="day" data-day="2"><input type="checkbox" class="day-check" onclick="toggleDay(2)"><span class="day-label">Day 2</span><div class="day-content"><div class="dc-title">机器学习基础（产品视角）</div><div class="dc-desc">监督/无监督/强化学习 · 评估指标 · 过拟合与偏差</div><div class="day-links"><a href="https://www.coursera.org/programs/metro-digital-learning-program-sdse4/learn/product-management-with-ai" target="_blank">Coursera AI PM</a></div></div></div>
+        <div class="day" data-day="3"><input type="checkbox" class="day-check" onclick="toggleDay(3)"><span class="day-label">Day 3</span><div class="day-content"><div class="dc-title">深度学习与 LLM 入门</div><div class="dc-desc">Transformer 直觉 · 预训练/微调 · Token & Embedding · 幻觉问题</div><div class="day-links"><a href="https://www.udacity.com/course/ai-product-manager-nanodegree--nd088" target="_blank">Udacity AI PM</a></div></div></div>
+        <div class="day" data-day="4"><input type="checkbox" class="day-check" onclick="toggleDay(4)"><span class="day-label">Day 4</span><div class="day-content"><div class="dc-title">AI 产品方法论（上）</div><div class="dc-desc">V2MOM 愿景框架 · JTBD 任务驱动 · RWW 机会评估</div><div class="day-links"><a href="https://online.em.kellogg.northwestern.edu/ai-driven-product-strategy" target="_blank">Kellogg AI 产品策略</a></div></div></div>
+        <div class="day" data-day="5"><input type="checkbox" class="day-check" onclick="toggleDay(5)"><span class="day-label">Day 5</span><div class="day-content"><div class="dc-title">AI 产品方法论（下）</div><div class="dc-desc">假设驱动开发 · MVP 设计 · Responsible AI · 偏见检测</div><div class="day-links"><a href="https://online.stanford.edu/courses/xgal0005-ai-powered-product-innovation" target="_blank">Stanford AI 产品</a></div></div></div>
+        <div class="day" data-day="6"><input type="checkbox" class="day-check" onclick="toggleDay(6)"><span class="day-label">Day 6</span><div class="day-content"><div class="dc-title">动手实践：AI 产品拆解</div><div class="dc-desc">拆解 ChatGPT · Notion AI · Perplexity，输出 PRD 框架</div><div class="day-links"><span class="day-tag proj">实战项目</span></div></div></div>
+        <div class="day" data-day="7"><input type="checkbox" class="day-check" onclick="toggleDay(7)"><span class="day-label">Day 7</span><div class="day-content"><div class="dc-title">📝 周复盘 + 小项目</div><div class="dc-desc">完成 AI 产品机会评估报告 · 小组讨论</div><div class="day-links"><span class="day-tag proj">复盘日</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- Week 2 -->
+    <div class="week" id="week-2">
+      <div class="week-hd" onclick="toggleWeek('week-2')">
+        <span class="week-tag wt-orange">第2周</span>
+        <span class="week-title">LLM 应用开发与提示词工程</span>
+        <span class="week-meta" id="week2-meta">0/7 完成</span>
+        <span class="week-arrow">▼</span>
+      </div>
+      <div class="week-bd">
+        <div class="day" data-day="8"><input type="checkbox" class="day-check" onclick="toggleDay(8)"><span class="day-label">Day 8</span><div class="day-content"><div class="dc-title">Prompt Engineering 精讲</div><div class="dc-desc">System/Known/Unknown · Chain-of-Thought · Few-shot · 结构化输出</div></div></div>
+        <div class="day" data-day="9"><input type="checkbox" class="day-check" onclick="toggleDay(9)"><span class="day-label">Day 9</span><div class="day-content"><div class="dc-title">RAG 架构深度解析</div><div class="dc-desc">Embedding · 向量数据库 · Chunking · 检索重排序</div><div class="day-links"><a href="https://executive-ed.xpro.mit.edu/building-ai-products-and-services" target="_blank">MIT xPRO</a></div></div></div>
+        <div class="day" data-day="10"><input type="checkbox" class="day-check" onclick="toggleDay(10)"><span class="day-label">Day 10</span><div class="day-content"><div class="dc-title">AI Agent 架构</div><div class="dc-desc">ReAct 模式 · Tool Use · Multi-Agent 协作 · 记忆与状态</div></div></div>
+        <div class="day" data-day="11"><input type="checkbox" class="day-check" onclick="toggleDay(11)"><span class="day-label">Day 11</span><div class="day-content"><div class="dc-title">模型选型与评估</div><div class="dc-desc">开源 vs 闭源 · 延迟/成本/质量 · 2026 模型对比</div></div></div>
+        <div class="day" data-day="12"><input type="checkbox" class="day-check" onclick="toggleDay(12)"><span class="day-label">Day 12</span><div class="day-content"><div class="dc-title">AI 产品原型工具</div><div class="dc-desc">Cursor · Bolt.new · LangFlow · Dify · 低代码 AI 搭建</div></div></div>
+        <div class="day" data-day="13"><input type="checkbox" class="day-check" onclick="toggleDay(13)"><span class="day-label">Day 13</span><div class="day-content"><div class="dc-title">动手实践：搭建 RAG Chatbot</div><div class="dc-desc">用 Dify/LangChain 搭建知识库问答 Bot · 部署上线</div><div class="day-links"><span class="day-tag proj">实战项目</span></div></div></div>
+        <div class="day" data-day="14"><input type="checkbox" class="day-check" onclick="toggleDay(14)"><span class="day-label">Day 14</span><div class="day-content"><div class="dc-title">📝 周复盘 + 原型展示</div><div class="dc-desc">展示 RAG Chatbot · 复盘 Prompt 优化</div><div class="day-links"><span class="day-tag proj">复盘日</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- Week 3 -->
+    <div class="week" id="week-3">
+      <div class="week-hd" onclick="toggleWeek('week-3')">
+        <span class="week-tag wt-red">第3周</span>
+        <span class="week-title">AI 产品开发实战与论文速读</span>
+        <span class="week-meta" id="week3-meta">0/7 完成</span>
+        <span class="week-arrow">▼</span>
+      </div>
+      <div class="week-bd">
+        <div class="day" data-day="15"><input type="checkbox" class="day-check" onclick="toggleDay(15)"><span class="day-label">Day 15</span><div class="day-content"><div class="dc-title">AI 产品开发全流程</div><div class="dc-desc">问题定义 → 数据准备 → 模型选型 → Prompt → 评估 → 部署 → 监控</div></div></div>
+        <div class="day" data-day="16"><input type="checkbox" class="day-check" onclick="toggleDay(16)"><span class="day-label">Day 16</span><div class="day-content"><div class="dc-title">数据策略与 Fine-tuning</div><div class="dc-desc">SFT · RLHF/DPO · 2026 微调最佳实践</div></div></div>
+        <div class="day" data-day="17"><input type="checkbox" class="day-check" onclick="toggleDay(17)"><span class="day-label">Day 17</span><div class="day-content"><div class="dc-title">AI 产品评估体系</div><div class="dc-desc">离线评估（LLM-as-Judge）· A/B Test · 用户反馈闭环</div></div></div>
+        <div class="day" data-day="18"><input type="checkbox" class="day-check" onclick="toggleDay(18)"><span class="day-label">Day 18</span><div class="day-content"><div class="dc-title">📄 论文精读 #1 — DUCTILE</div><div class="dc-desc">Agentic LLM 编排工程分析任务</div><div class="day-links"><a href="https://arxiv.org/abs/2603.10249" target="_blank">arXiv</a><span class="day-tag paper">论文精读</span></div></div></div>
+        <div class="day" data-day="19"><input type="checkbox" class="day-check" onclick="toggleDay(19)"><span class="day-label">Day 19</span><div class="day-content"><div class="dc-title">📄 论文精读 #2 — Generative Agents</div><div class="dc-desc">用 Agent 模拟用户进行产品概念测试</div><div class="day-links"><a href="https://arxiv.org/abs/2603.29890" target="_blank">arXiv (CHI 2026)</a><span class="day-tag paper">论文精读</span></div></div></div>
+        <div class="day" data-day="20"><input type="checkbox" class="day-check" onclick="toggleDay(20)"><span class="day-label">Day 20</span><div class="day-content"><div class="dc-title">📄 论文精读 #3 — Multi-Agent 评估</div><div class="dc-desc">8 角色 Agent 评审新产品概念可行性</div><div class="day-links"><a href="https://arxiv.org/abs/2603.05980" target="_blank">arXiv</a><span class="day-tag paper">论文精读</span></div></div></div>
+        <div class="day" data-day="21"><input type="checkbox" class="day-check" onclick="toggleDay(21)"><span class="day-label">Day 21</span><div class="day-content"><div class="dc-title">📝 周复盘 + 论文笔记</div><div class="dc-desc">整理 3 篇论文笔记 · 输出 AI 产品技术雷达</div><div class="day-links"><span class="day-tag proj">复盘日</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- Week 4 -->
+    <div class="week" id="week-4">
+      <div class="week-hd" onclick="toggleWeek('week-4')">
+        <span class="week-tag wt-purple">第4周</span>
+        <span class="week-title">AI 产品发布与职业发展</span>
+        <span class="week-meta" id="week4-meta">0/7 完成</span>
+        <span class="week-arrow">▼</span>
+      </div>
+      <div class="week-bd">
+        <div class="day" data-day="22"><input type="checkbox" class="day-check" onclick="toggleDay(22)"><span class="day-label">Day 22</span><div class="day-content"><div class="dc-title">Go-to-Market 策略</div><div class="dc-desc">PLG vs 销售驱动 · 定价策略 · 增长飞轮</div></div></div>
+        <div class="day" data-day="23"><input type="checkbox" class="day-check" onclick="toggleDay(23)"><span class="day-label">Day 23</span><div class="day-content"><div class="dc-title">AI 产品合规与安全</div><div class="dc-desc">EU AI Act · 数据隐私 · 内容安全 · 红队测试</div></div></div>
+        <div class="day" data-day="24"><input type="checkbox" class="day-check" onclick="toggleDay(24)"><span class="day-label">Day 24</span><div class="day-content"><div class="dc-title">📄 论文精读 #4 — LLM 设计伙伴</div><div class="dc-desc">Claude 3.5 最受偏好 · o1-mini 最高对齐度</div><div class="day-links"><a href="https://conf.researchr.org/details/cain-2026/cain-2026-call-for-papers/5/" target="_blank">CAIN 2026</a><span class="day-tag paper">论文精读</span></div></div></div>
+        <div class="day" data-day="25"><input type="checkbox" class="day-check" onclick="toggleDay(25)"><span class="day-label">Day 25</span><div class="day-content"><div class="dc-title">📄 论文精读 #5 — LLM vs 人工 OOD</div><div class="dc-desc">PureAI 代码质量高但过度简化 · human guidance 不可缺</div><div class="day-links"><a href="https://arxiv.org/abs/2605.19901" target="_blank">arXiv</a><span class="day-tag paper">论文精读</span></div></div></div>
+        <div class="day" data-day="26"><input type="checkbox" class="day-check" onclick="toggleDay(26)"><span class="day-label">Day 26</span><div class="day-content"><div class="dc-title">项目实战：完整 AI 产品设计</div><div class="dc-desc">选题 → 用户调研 → PRD → 原型 → 评估 → 路演准备</div><div class="day-links"><span class="day-tag proj">实战项目</span></div></div></div>
+        <div class="day" data-day="27"><input type="checkbox" class="day-check" onclick="toggleDay(27)"><span class="day-label">Day 27</span><div class="day-content"><div class="dc-title">🚀 项目冲刺 + Portfolio 制作</div><div class="dc-desc">项目文档 · 演示视频 · Case Study · GitHub/LinkedIn</div><div class="day-links"><span class="day-tag proj">实战项目</span></div></div></div>
+        <div class="day" data-day="28"><input type="checkbox" class="day-check" onclick="toggleDay(28)"><span class="day-label">Day 28</span><div class="day-content"><div class="dc-title">🚀 项目冲刺 + Portfolio 制作</div><div class="dc-desc">继续完善项目 · 准备路演材料</div><div class="day-links"><span class="day-tag proj">实战项目</span></div></div></div>
+        <div class="day" data-day="29"><input type="checkbox" class="day-check" onclick="toggleDay(29)"><span class="day-label">Day 29</span><div class="day-content"><div class="dc-title">🚀 项目冲刺 + Portfolio 制作</div><div class="dc-desc">面试准备 · AI PM 岗位分析 · 学习路线下一步</div><div class="day-links"><span class="day-tag proj">实战项目</span></div></div></div>
+        <div class="day" data-day="30"><input type="checkbox" class="day-check" onclick="toggleDay(30)"><span class="day-label">Day 30</span><div class="day-content"><div class="dc-title">🎉 毕业路演 + 职业规划</div><div class="dc-desc">项目路演 · 面试模拟 · 学习路线规划</div><div class="day-links"><span class="day-tag proj">毕业日</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COURSE LINKS ===== -->
+  <div class="sec">
+    <div class="sec-hd"><span class="emoji">🎓</span> 推荐课程</div>
+    <div class="quick-grid">
+      <div class="quick-card"><h5>MIT xPRO — Building AI Products</h5><p>12 周 · RAG/Agentic AI/多模态 · 约 $2,300</p><a href="https://executive-ed.xpro.mit.edu/building-ai-products-and-services" target="_blank">查看 →</a></div>
+      <div class="quick-card"><h5>Stanford — AI-Powered Product Innovation</h5><p>6 周 · 人本 AI 设计 · $2,950</p><a href="https://online.stanford.edu/courses/xgal0005-ai-powered-product-innovation" target="_blank">查看 →</a></div>
+      <div class="quick-card"><h5>IBM AI PM 专业认证</h5><p>6 个月 · 零基础 · 免费可旁听</p><a href="https://catalog.skills.network/learning_path/254/" target="_blank">查看 →</a></div>
+      <div class="quick-card"><h5>Udacity AI PM Nanodegree</h5><p>18 小时 · 4 门课 3 个项目</p><a href="https://www.udacity.com/course/ai-product-manager-nanodegree--nd088" target="_blank">查看 →</a></div>
+      <div class="quick-card"><h5>Kellogg — AI-Driven Product Strategy</h5><p>8 周 · V2MOM/JTBD/RWW · $3,050</p><a href="https://online.em.kellogg.northwestern.edu/ai-driven-product-strategy" target="_blank">查看 →</a></div>
+      <div class="quick-card"><h5>Coursera — Scrum Alliance AI 专项</h5><p>5 门课 · Prompt/Discovery/PO</p><a href="https://www.globenewswire.com/news-release/2026/01/21/3222841/0/en/Scrum-Alliance-Launches-2nd-Coursera-Specialization.html" target="_blank">查看 →</a></div>
+      <div class="quick-card"><h5>ISB — PM with AI & GenAI</h5><p>16 周 · 印度第一商学院 · 约 $1,900</p><a href="https://online-er.isb.edu/product-management/index-af.php" target="_blank">查看 →</a></div>
+      <div class="quick-card"><h5>BITSoM + PwC — PM with Agentic AI</h5><p>6 个月 · Agentic AI/LLMOps · 约 $620</p><a href="https://cepd.bitsom.edu.in/pm-gen-ai" target="_blank">查看 →</a></div>
+    </div>
+  </div>
+
+  <!-- ===== DAILY NEWS ===== -->
+  <div class="sec">
+    <div class="sec-hd"><span class="emoji">📡</span> 每日 AI 新闻资讯</div>
+    <div style="margin-bottom:12px;">
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">推荐信源（每天 15 分钟速览）：</div>
+      <div class="news-src-grid">
+        <a class="news-src" href="https://news.ycombinator.com" target="_blank">Hacker News</a>
+        <a class="news-src" href="https://www.theverge.com/ai-artificial-intelligence" target="_blank">The Verge AI</a>
+        <a class="news-src" href="https://techcrunch.com/category/artificial-intelligence/" target="_blank">TechCrunch AI</a>
+        <a class="news-src" href="https://www.artificialintelligence-news.com" target="_blank">AI News</a>
+        <a class="news-src" href="https://semianalysis.com" target="_blank">SemiAnalysis</a>
+        <a class="news-src" href="https://www.importai.net" target="_blank">Import AI</a>
+        <a class="news-src" href="https://thesequence.substack.com" target="_blank">The Sequence</a>
+        <a class="news-src" href="https://www.latent.space" target="_blank">Latent Space</a>
+        <a class="news-src" href="https://arxiv.org/list/cs.AI/recent" target="_blank">arXiv AI 最新</a>
+        <a class="news-src" href="https://huggingface.co/papers" target="_blank">HF Papers</a>
+        <a class="news-src" href="https://www.deeplearning.ai/the-batch/" target="_blank">The Batch</a>
+        <a class="news-src" href="https://lastweekin.ai" target="_blank">Last Week in AI</a>
+      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-date">05-23</div>
+      <div class="news-body"><h4>Claude Code 支持 DeepSeek V4 模型</h4><p>Claude Code 现已支持 deepseek-v4-pro 和 v4-flash 模型，扩展 AI 编码工具选择。</p><div class="news-tags"><span>Claude</span><span>模型更新</span></div></div>
+    </div>
+    <div class="news-card">
+      <div class="news-date">05-22</div>
+      <div class="news-body"><h4>MIT xPRO 新版 AI 产品课程开课</h4><p>新增 Agentic AI 和 RAG 专题工作坊，6月30日开课，面向零基础 PM。</p><div class="news-tags"><span>教育</span><span>AI产品</span></div></div>
+    </div>
+    <div class="news-card">
+      <div class="news-date">05-20</div>
+      <div class="news-body"><h4>DUCTILE 论文：Agent 编排工程分析任务</h4><p>航太制造场景验证，LLM Agent 自适应编排 + 确定性工具执行。</p><div class="news-tags"><span>论文</span><span>Agent</span></div></div>
+    </div>
+    <div class="news-card">
+      <div class="news-date">05-18</div>
+      <div class="news-body"><h4>Adobe CHI 2026：Agent 模拟用户概念测试</h4><p>群体级准确度达标，但个体层面不精确——适合早期筛选。</p><div class="news-tags"><span>论文</span><span>产品发现</span></div></div>
+    </div>
+    <div class="news-card">
+      <div class="news-date">05-15</div>
+      <div class="news-body"><h4>Scrum Alliance × Coursera 推出 AI PM 专项</h4><p>5 门课覆盖 Prompt Engineering、AI 驱动产品发现、AI PO 技能。</p><div class="news-tags"><span>教育</span><span>认证</span></div></div>
+    </div>
+    <div class="news-card">
+      <div class="news-date">05-10</div>
+      <div class="news-body"><h4>多 Agent 系统评估产品概念研究发布</h4><p>8 角色 Agent 模拟 R&D/市场/财务评审，匹配专家排名。</p><div class="news-tags"><span>论文</span><span>Multi-Agent</span></div></div>
+    </div>
+    <div class="news-card">
+      <div class="news-date">05-05</div>
+      <div class="news-body"><h4>EU AI Act 全面生效，AI 产品合规门槛提升</h4><p>高风险 AI 系统须满足透明度、数据治理、人类监督要求。</p><div class="news-tags"><span>政策</span><span>合规</span></div></div>
+    </div>
+  </div>
+
+  <!-- ===== WEEKLY PAPERS ===== -->
+  <div class="sec">
+    <div class="sec-hd"><span class="emoji">📄</span> 每周 AI 论文速读与精读</div>
+
+    <div class="week-papers-hd">🔬 第 3 周精读（AI 产品方向）</div>
+
+    <div class="paper">
+      <div class="paper-meta"><span class="pm-arxiv">arXiv 2026.03</span></div>
+      <h4><a href="https://arxiv.org/abs/2603.10249" target="_blank">DUCTILE: Agentic LLM Orchestration of Engineering Analysis</a></h4>
+      <div class="authors">Alejandro Pradas-Gomez et al.</div>
+      <div class="abstract">LLM Agent 自适应编排工程分析任务，航太制造场景验证，Agent+确定性工具混合架构。</div>
+      <div class="paper-links"><a href="https://arxiv.org/abs/2603.10249" target="_blank">📄 arXiv</a></div>
+      <div class="takeaway"><strong>💡 产品启示</strong>Agent 在工程领域落地，AI PM 应关注 Agent+工具混合架构设计。</div>
+    </div>
+
+    <div class="paper">
+      <div class="paper-meta"><span class="pm-conf">CHI 2026 Honourable Mention</span></div>
+      <h4><a href="https://arxiv.org/abs/2603.29890" target="_blank">Interview-Informed Generative Agents for Product Discovery</a></h4>
+      <div class="authors">Zichao Wang & Alexa Siu (Adobe Research)</div>
+      <div class="abstract">Agent 群体级模拟准确，个体不精确——适合早期概念筛选而非个人用户测试。</div>
+      <div class="paper-links"><a href="https://arxiv.org/abs/2603.29890" target="_blank">📄 arXiv</a></div>
+      <div class="takeaway"><strong>💡 产品启示</strong>Agent 筛选 → 真人验证，是性价比最优的产品发现流程。</div>
+    </div>
+
+    <div class="paper">
+      <div class="paper-meta"><span class="pm-arxiv">arXiv 2026.03</span></div>
+      <h4><a href="https://arxiv.org/abs/2603.05980" target="_blank">Multi-Agent System for Evaluation of New Product Concepts</a></h4>
+      <div class="authors">Bin Xuan et al.</div>
+      <div class="abstract">8 角色多 Agent（RAG+实时搜索）评估产品技术/市场可行性，匹配专家验证结果。</div>
+      <div class="paper-links"><a href="https://arxiv.org/abs/2603.05980" target="_blank">📄 arXiv</a></div>
+      <div class="takeaway"><strong>💡 产品启示</strong>组建"虚拟评审团"模拟跨部门评估，加速产品决策。</div>
+    </div>
+
+    <div class="week-papers-hd">🔬 第 4 周精读（设计与开发）</div>
+
+    <div class="paper">
+      <div class="paper-meta"><span class="pm-conf">CAIN 2026 (ICSE 联名)</span></div>
+      <h4><a href="https://conf.researchr.org/details/cain-2026/cain-2026-call-for-papers/5/" target="_blank">LLMs as Design Partners for AI-Based System Patterns</a></h4>
+      <div class="authors">Felipe Rodrigues de Oliveira et al.</div>
+      <div class="abstract">Claude 3.5 最受人类偏好，o1-mini 最高对齐度——LLM 可作为 AI 系统设计伙伴。</div>
+      <div class="paper-links"><a href="https://conf.researchr.org/details/cain-2026/cain-2026-call-for-papers/5/" target="_blank">📄 会议页</a></div>
+      <div class="takeaway"><strong>💡 产品启示</strong>AI PM 应学会用 LLM 辅助系统设计决策，但不能完全替代架构师。</div>
+    </div>
+
+    <div class="paper">
+      <div class="paper-meta"><span class="pm-arxiv">arXiv 2026.05</span></div>
+      <h4><a href="https://arxiv.org/abs/2605.19901" target="_blank">Can LLMs Produce Better Object-Oriented Designs than Human?</a></h4>
+      <div class="authors">Zushuai Zhang et al.</div>
+      <div class="abstract">PureAI 代码异味更少但过度简化——缺少抽象和责任分离，人工指导仍不可缺。</div>
+      <div class="paper-links"><a href="https://arxiv.org/abs/2605.19901" target="_blank">📄 arXiv</a></div>
+      <div class="takeaway"><strong>💡 产品启示</strong>在产品中设计 human-in-the-loop 机制，弥补 LLM 抽象能力不足。</div>
+    </div>
+
+    <div class="week-papers-hd">📋 速读推荐（扩展阅读）</div>
+    <div class="quick-grid">
+      <div class="quick-card"><h5>LLMs in Industrial Domains</h5><p>全产品生命周期 Prompt/RAG/微调综述</p><a href="https://www.sciencedirect.com/science/article/abs/pii/S1474034626003472" target="_blank">查看 →</a></div>
+      <div class="quick-card"><h5>Attention Is All You Need</h5><p>Transformer 经典原文（必读）</p><a href="https://arxiv.org/abs/1706.03762" target="_blank">查看 →</a></div>
+      <div class="quick-card"><h5>LLM-powered Autonomous Agents</h5><p>Weng 经典 Agent 综述（2023）</p><a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank">查看 →</a></div>
+      <div class="quick-card"><h5>InstructGPT / RLHF</h5><p>人类反馈指令微调原理</p><a href="https://arxiv.org/abs/2203.02155" target="_blank">查看 →</a></div>
+      <div class="quick-card"><h5>RAG 综述</h5><p>Retrieval-Augmented Generation 全面综述</p><a href="https://arxiv.org/abs/2312.10997" target="_blank">查看 →</a></div>
+      <div class="quick-card"><h5>Direct Preference Optimization</h5><p>DPO — 更简单的对齐算法</p><a href="https://arxiv.org/abs/2305.18290" target="_blank">查看 →</a></div>
+    </div>
+  </div>
+
+  <!-- ===== DAILY SCHEDULE ===== -->
+  <div class="sec">
+    <div class="sec-hd"><span class="emoji">⏰</span> 每日学习时间线</div>
+    <div class="timeline">
+      <div class="ti" id="ti-morning"><div class="ti-time">☀️ 早上 30 分钟</div><div class="ti-title">AI 新闻速览</div><div class="ti-desc">刷 HN / The Batch / 公众号，记录 3 条关键动态</div></div>
+      <div class="ti" id="ti-day"><div class="ti-time">📚 白天 1-2 小时</div><div class="ti-title">核心课程学习</div><div class="ti-desc">按大纲完成当日模块，边学边做笔记</div></div>
+      <div class="ti" id="ti-night"><div class="ti-time">✍️ 晚上 30 分钟</div><div class="ti-title">动手实践 / 论文阅读</div><div class="ti-desc">实战项目或精读论文，输出总结笔记</div></div>
+      <div class="ti" id="ti-weekend"><div class="ti-time">📝 周末 1-2 小时</div><div class="ti-title">周复盘 + 项目冲刺</div><div class="ti-desc">完成周项目、整理论文笔记、更新 Portfolio</div></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  AI 产品速成 · 30天追踪计划 · 2026 年 5 月 · <a href="https://catalog.skills.network/learning_path/254/" target="_blank">课程资源汇总</a>
+</footer>
+
+<script>
+  const KEY = 'ai-course-progress';
+  const TOTAL = 30;
+  let progress = {};
+
+  function load() {
+    try { progress = JSON.parse(localStorage.getItem(KEY)) || {}; }
+    catch { progress = {}; }
+  }
+
+  function save() { localStorage.setItem(KEY, JSON.stringify(progress)); }
+
+  function toggleDay(day) {
+    progress[day] = !progress[day];
+    save();
+    render();
+  }
+
+  function toggleWeek(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+
+  function updateWeekMeta(week, days) {
+    const done = days.filter(d => progress[d]).length;
+    const el = document.getElementById('week' + week + '-meta');
+    if (el) el.textContent = done + '/' + days.length + ' 完成';
+    return done;
+  }
+
+  function render() {
+    let done = 0;
+    document.querySelectorAll('.day[data-day]').forEach(row => {
+      const day = parseInt(row.dataset.day);
+      const checked = !!progress[day];
+      if (checked) done++;
+      row.classList.toggle('done', checked);
+      const cb = row.querySelector('.day-check');
+      if (cb) cb.checked = checked;
+    });
+
+    const pct = Math.round(done / TOTAL * 100);
+    document.getElementById('stat-done').textContent = done;
+    document.getElementById('stat-pct').textContent = pct + '%';
+    document.getElementById('main-progress').style.width = pct + '%';
+
+    const w1 = updateWeekMeta(1, [1,2,3,4,5,6,7]);
+    const w2 = updateWeekMeta(2, [8,9,10,11,12,13,14]);
+    const w3 = updateWeekMeta(3, [15,16,17,18,19,20,21]);
+    const w4 = updateWeekMeta(4, [22,23,24,25,26,27,28,29,30]);
+
+    const currentWeek = done < 8 ? 1 : done < 15 ? 2 : done < 22 ? 3 : 4;
+    const weekDone = done < 8 ? done : done < 15 ? done - 7 : done < 22 ? done - 14 : done - 21;
+    const weekTotal = currentWeek === 1 ? 7 : currentWeek === 2 ? 7 : currentWeek === 3 ? 7 : 9;
+    document.getElementById('stat-week').textContent = '第' + currentWeek + '周 ' + weekDone + '/' + weekTotal;
+
+    // timeline
+    document.getElementById('ti-morning').classList.toggle('done', done >= 1);
+    document.getElementById('ti-day').classList.toggle('done', done >= 8);
+    document.getElementById('ti-night').classList.toggle('done', done >= 15);
+    document.getElementById('ti-weekend').classList.toggle('done', done >= 22);
+  }
+
+  // Init
+  load();
+  render();
+
+  // Auto-open current week
+  const d = Object.keys(progress).filter(k => progress[k]).length;
+  const cw = d < 8 ? 1 : d < 15 ? 2 : d < 22 ? 3 : 4;
+  document.querySelectorAll('.week').forEach((w, i) => {
+    if (i + 1 === cw) w.classList.add('open');
+    else w.classList.remove('open');
+  });
+</script>
+
+</body>
+</html>
